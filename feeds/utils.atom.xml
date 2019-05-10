@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>ashxjain - utils</title><link href="http://ashxjain.github.io/" rel="alternate"></link><link href="http://ashxjain.github.io/feeds/utils.atom.xml" rel="self"></link><id>http://ashxjain.github.io/</id><updated>2019-05-10T00:00:00+05:30</updated><subtitle>Software Engineer</subtitle><entry><title>Understanding LDAP Searches</title><link href="http://ashxjain.github.io/ldap-search.html" rel="alternate"></link><published>2019-05-10T00:00:00+05:30</published><updated>2019-05-10T00:00:00+05:30</updated><author><name>Ashish Jain</name></author><id>tag:ashxjain.github.io,2019-05-10:/ldap-search.html</id><summary type="html">&lt;p&gt;LDAP search and filters using ldapsearch tool&lt;/p&gt;</summary><content type="html">&lt;p&gt;LDAP is Lightweight Directory Access Protocol, it a client-server based protocol to access directory services. More information can be found on the Internet. The main goal of this article is on understanding how to query LDAP server for data&lt;/p&gt;
+&lt;p&gt;I have a LDAP server running on my local machine on port 9389. This is a custom server written in Go and hence it may  not adhere with LDAP standards. We will be using &lt;code&gt;ldapsearch&lt;/code&gt; tool for querying ldap server.&lt;/p&gt;
+&lt;p&gt;Some details on the common arguments used with &lt;code&gt;ldapsearch&lt;/code&gt; for querying:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;-x&lt;/code&gt; : Does a simple bind, rather than SASL&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-h&lt;/code&gt;: Address of the LDAP server&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-p&lt;/code&gt;: Port on which LDAP server is listening&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-D&lt;/code&gt;: BindDN used for authenticating LDAP queries, consider this as Username&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-w&lt;/code&gt;: Password for the BindDN&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-b&lt;/code&gt;: Search base (baseDN), this is the actual serach query&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;filter&amp;gt;&lt;/code&gt;: Filter used to filter out search results&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Here are some query outputs:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;-b ''&lt;/code&gt; : Empty search base will return all the objects. There are two set of objects: &lt;code&gt;users&lt;/code&gt; &amp;amp; &lt;code&gt;orgs&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Note: &lt;code&gt;-D&lt;/code&gt; &amp;amp; &lt;code&gt;-w&lt;/code&gt; are used for authentication&lt;/em&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; ldapsearch -x -h &lt;span class="m"&gt;127&lt;/span&gt;.0.0.1 -p &lt;span class="m"&gt;9334&lt;/span&gt; -D &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;worker1,ou&lt;span class="o"&gt;=&lt;/span&gt;users -w workinghard  -b &lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class="c1"&gt;# extended LDIF&lt;/span&gt;
+&lt;span class="c1"&gt;#&lt;/span&gt;
+&lt;span class="c1"&gt;# LDAPv3&lt;/span&gt;
+&lt;span class="c1"&gt;# base &amp;lt;&amp;gt; with scope subtree&lt;/span&gt;
+&lt;span class="c1"&gt;# filter: (objectclass=*)&lt;/span&gt;
+&lt;span class="c1"&gt;# requesting: ALL&lt;/span&gt;
+&lt;span class="c1"&gt;#&lt;/span&gt;
+
+&lt;span class="c1"&gt;# admin, users&lt;/span&gt;
+dn: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;admin,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+cn: admin
+sAMAccountName: admin
+email: admin@example.net
+mail: admin@example.net
+userPrincipalName: admin@users
+objectClass: posixAccount
+memberOf: &lt;span class="nv"&gt;ou&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;orgs
+
+&lt;span class="c1"&gt;# orgman1, users&lt;/span&gt;
+dn: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;orgman1,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+cn: orgman1
+sAMAccountName: orgman1
+email: orgman1@bigorg.com
+mail: orgman1@bigorg.com
+userPrincipalName: orgman1@users
+objectClass: posixAccount
+memberOf: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;bigorg1,ou&lt;span class="o"&gt;=&lt;/span&gt;orgs
+
+&lt;span class="c1"&gt;# worker1, users&lt;/span&gt;
+dn: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;worker1,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+cn: worker1
+sAMAccountName: worker1
+email: worker1@bigorg1.com
+mail: worker1@bigorg1.com
+userPrincipalName: worker1@users
+objectClass: posixAccount
+memberOf: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;bigorg1,ou&lt;span class="o"&gt;=&lt;/span&gt;orgs
+
+&lt;span class="c1"&gt;# orgman2, users&lt;/span&gt;
+dn: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;orgman2,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+cn: orgman2
+sAMAccountName: orgman2
+email: orgman2@bigorg.com
+mail: orgman2@bigorg.com
+userPrincipalName: orgman2@users
+objectClass: posixAccount
+memberOf: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;bigorg2,ou&lt;span class="o"&gt;=&lt;/span&gt;orgs
+
+&lt;span class="c1"&gt;# worker2, users&lt;/span&gt;
+dn: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;worker2,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+cn: worker2
+sAMAccountName: worker2
+email: worker2@bigorg2.com
+mail: worker2@bigorg2.com
+userPrincipalName: worker2@users
+objectClass: posixAccount
+memberOf: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;bigorg2,ou&lt;span class="o"&gt;=&lt;/span&gt;orgs
+
+&lt;span class="c1"&gt;# bigorg1, orgs&lt;/span&gt;
+dn: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;bigorg1,ou&lt;span class="o"&gt;=&lt;/span&gt;orgs
+ou: orgs
+cn: bigorg1
+objectClass: groupOfUniqueNames
+uniqueMember: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;orgman1,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+uniqueMember: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;worker1,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+
+&lt;span class="c1"&gt;# bigorg2, orgs&lt;/span&gt;
+dn: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;bigorg2,ou&lt;span class="o"&gt;=&lt;/span&gt;orgs
+ou: orgs
+cn: bigorg2
+objectClass: groupOfUniqueNames
+uniqueMember: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;orgman2,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+uniqueMember: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;worker2,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+
+&lt;span class="c1"&gt;# search result&lt;/span&gt;
+search: &lt;span class="m"&gt;2&lt;/span&gt;
+result: &lt;span class="m"&gt;0&lt;/span&gt; Success
+
+&lt;span class="c1"&gt;# numResponses: 8&lt;/span&gt;
+&lt;span class="c1"&gt;# numEntries: 7&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;-b 'ou=users'&lt;/code&gt; : Returns all users&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; ldapsearch -x -h &lt;span class="m"&gt;127&lt;/span&gt;.0.0.1 -p &lt;span class="m"&gt;9334&lt;/span&gt; -D &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;worker1,ou&lt;span class="o"&gt;=&lt;/span&gt;users -w workinghard  -b &lt;span class="s1"&gt;&amp;#39;ou=users&amp;#39;&lt;/span&gt;
+&lt;span class="c1"&gt;# extended LDIF&lt;/span&gt;
+&lt;span class="c1"&gt;#&lt;/span&gt;
+&lt;span class="c1"&gt;# LDAPv3&lt;/span&gt;
+&lt;span class="c1"&gt;# base &amp;lt;ou=users&amp;gt; with scope subtree&lt;/span&gt;
+&lt;span class="c1"&gt;# filter: (objectclass=*)&lt;/span&gt;
+&lt;span class="c1"&gt;# requesting: ALL&lt;/span&gt;
+&lt;span class="c1"&gt;#&lt;/span&gt;
+
+&lt;span class="c1"&gt;# admin, users&lt;/span&gt;
+dn: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;admin,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+cn: admin
+sAMAccountName: admin
+email: admin@example.net
+mail: admin@example.net
+userPrincipalName: admin@users
+objectClass: posixAccount
+memberOf: &lt;span class="nv"&gt;ou&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;orgs
+
+&lt;span class="c1"&gt;# orgman1, users&lt;/span&gt;
+dn: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;orgman1,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+cn: orgman1
+sAMAccountName: orgman1
+email: orgman1@bigorg.com
+mail: orgman1@bigorg.com
+userPrincipalName: orgman1@users
+objectClass: posixAccount
+memberOf: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;bigorg1,ou&lt;span class="o"&gt;=&lt;/span&gt;orgs
+
+&lt;span class="c1"&gt;# worker1, users&lt;/span&gt;
+dn: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;worker1,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+cn: worker1
+sAMAccountName: worker1
+email: worker1@bigorg1.com
+mail: worker1@bigorg1.com
+userPrincipalName: worker1@users
+objectClass: posixAccount
+memberOf: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;bigorg1,ou&lt;span class="o"&gt;=&lt;/span&gt;orgs
+
+&lt;span class="c1"&gt;# orgman2, users&lt;/span&gt;
+dn: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;orgman2,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+cn: orgman2
+sAMAccountName: orgman2
+email: orgman2@bigorg.com
+mail: orgman2@bigorg.com
+userPrincipalName: orgman2@users
+objectClass: posixAccount
+memberOf: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;bigorg2,ou&lt;span class="o"&gt;=&lt;/span&gt;orgs
+
+&lt;span class="c1"&gt;# worker2, users&lt;/span&gt;
+dn: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;worker2,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+cn: worker2
+sAMAccountName: worker2
+email: worker2@bigorg2.com
+mail: worker2@bigorg2.com
+userPrincipalName: worker2@users
+objectClass: posixAccount
+memberOf: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;bigorg2,ou&lt;span class="o"&gt;=&lt;/span&gt;orgs
+
+&lt;span class="c1"&gt;# search result&lt;/span&gt;
+search: &lt;span class="m"&gt;2&lt;/span&gt;
+result: &lt;span class="m"&gt;0&lt;/span&gt; Success
+
+&lt;span class="c1"&gt;# numResponses: 6&lt;/span&gt;
+&lt;span class="c1"&gt;# numEntries: 5&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;-b 'cn=orgman2,ou=users'&lt;/code&gt; : Returns specifc user with &lt;code&gt;cn=orgman2&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; ldapsearch -x -h &lt;span class="m"&gt;127&lt;/span&gt;.0.0.1 -p &lt;span class="m"&gt;9334&lt;/span&gt; -D &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;worker1,ou&lt;span class="o"&gt;=&lt;/span&gt;users -w workinghard  -b &lt;span class="s1"&gt;&amp;#39;cn=orgman2,ou=users&amp;#39;&lt;/span&gt;
+&lt;span class="c1"&gt;# extended LDIF&lt;/span&gt;
+&lt;span class="c1"&gt;#&lt;/span&gt;
+&lt;span class="c1"&gt;# LDAPv3&lt;/span&gt;
+&lt;span class="c1"&gt;# base &amp;lt;cn=orgman2,ou=users&amp;gt; with scope subtree&lt;/span&gt;
+&lt;span class="c1"&gt;# filter: (objectclass=*)&lt;/span&gt;
+&lt;span class="c1"&gt;# requesting: ALL&lt;/span&gt;
+&lt;span class="c1"&gt;#&lt;/span&gt;
+
+&lt;span class="c1"&gt;# orgman2, users&lt;/span&gt;
+dn: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;orgman2,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+cn: orgman2
+sAMAccountName: orgman2
+email: orgman2@bigorg.com
+mail: orgman2@bigorg.com
+userPrincipalName: orgman2@users
+objectClass: posixAccount
+memberOf: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;bigorg2,ou&lt;span class="o"&gt;=&lt;/span&gt;orgs
+
+&lt;span class="c1"&gt;# search result&lt;/span&gt;
+search: &lt;span class="m"&gt;2&lt;/span&gt;
+result: &lt;span class="m"&gt;0&lt;/span&gt; Success
+
+&lt;span class="c1"&gt;# numResponses: 2&lt;/span&gt;
+&lt;span class="c1"&gt;# numEntries: 1&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;-b 'ou=orgs'&lt;/code&gt; : Returns all orgs&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; ldapsearch -x -h &lt;span class="m"&gt;127&lt;/span&gt;.0.0.1 -p &lt;span class="m"&gt;9334&lt;/span&gt; -D &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;orgman1,ou&lt;span class="o"&gt;=&lt;/span&gt;users -w pointyears -b &lt;span class="s1"&gt;&amp;#39;ou=orgs&amp;#39;&lt;/span&gt;
+&lt;span class="c1"&gt;# extended LDIF&lt;/span&gt;
+&lt;span class="c1"&gt;#&lt;/span&gt;
+&lt;span class="c1"&gt;# LDAPv3&lt;/span&gt;
+&lt;span class="c1"&gt;# base &amp;lt;ou=orgs&amp;gt; with scope subtree&lt;/span&gt;
+&lt;span class="c1"&gt;# filter: (objectclass=*)&lt;/span&gt;
+&lt;span class="c1"&gt;# requesting: ALL&lt;/span&gt;
+&lt;span class="c1"&gt;#&lt;/span&gt;
+
+&lt;span class="c1"&gt;# bigorg1, orgs&lt;/span&gt;
+dn: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;bigorg1,ou&lt;span class="o"&gt;=&lt;/span&gt;orgs
+ou: orgs
+cn: bigorg1
+objectClass: groupOfUniqueNames
+uniqueMember: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;orgman1,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+uniqueMember: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;worker1,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+
+&lt;span class="c1"&gt;# bigorg2, orgs&lt;/span&gt;
+dn: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;bigorg2,ou&lt;span class="o"&gt;=&lt;/span&gt;orgs
+ou: orgs
+cn: bigorg2
+objectClass: groupOfUniqueNames
+uniqueMember: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;orgman2,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+uniqueMember: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;worker2,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+
+&lt;span class="c1"&gt;# search result&lt;/span&gt;
+search: &lt;span class="m"&gt;2&lt;/span&gt;
+result: &lt;span class="m"&gt;0&lt;/span&gt; Success
+
+&lt;span class="c1"&gt;# numResponses: 3&lt;/span&gt;
+&lt;span class="c1"&gt;# numEntries: 2&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;-b 'cn=bigorg1,ou=orgs'&lt;/code&gt; : Returns specific org with &lt;code&gt;cn=bigorg1&lt;/code&gt; from the list of orgs&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; ldapsearch -x -h &lt;span class="m"&gt;127&lt;/span&gt;.0.0.1 -p &lt;span class="m"&gt;9334&lt;/span&gt; -D &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;orgman1,ou&lt;span class="o"&gt;=&lt;/span&gt;users -w pointyears -b &lt;span class="s1"&gt;&amp;#39;cn=bigorg1,ou=orgs&amp;#39;&lt;/span&gt;
+&lt;span class="c1"&gt;# extended LDIF&lt;/span&gt;
+&lt;span class="c1"&gt;#&lt;/span&gt;
+&lt;span class="c1"&gt;# LDAPv3&lt;/span&gt;
+&lt;span class="c1"&gt;# base &amp;lt;cn=bigorg1,ou=orgs&amp;gt; with scope subtree&lt;/span&gt;
+&lt;span class="c1"&gt;# filter: (objectclass=*)&lt;/span&gt;
+&lt;span class="c1"&gt;# requesting: ALL&lt;/span&gt;
+&lt;span class="c1"&gt;#&lt;/span&gt;
+
+&lt;span class="c1"&gt;# bigorg1, orgs&lt;/span&gt;
+dn: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;bigorg1,ou&lt;span class="o"&gt;=&lt;/span&gt;orgs
+ou: orgs
+cn: bigorg1
+objectClass: groupOfUniqueNames
+uniqueMember: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;orgman1,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+uniqueMember: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;worker1,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+
+&lt;span class="c1"&gt;# search result&lt;/span&gt;
+search: &lt;span class="m"&gt;2&lt;/span&gt;
+result: &lt;span class="m"&gt;0&lt;/span&gt; Success
+
+&lt;span class="c1"&gt;# numResponses: 2&lt;/span&gt;
+&lt;span class="c1"&gt;# numEntries: 1&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;-b '' (sAMAccountName=worker2)&lt;/code&gt; : Empty search base will return all the objects. Filter &lt;code&gt;(sAMAccountName=worker2)&lt;/code&gt; will filter those objects matching this filter&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; ldapsearch -x -h &lt;span class="m"&gt;127&lt;/span&gt;.0.0.1 -p &lt;span class="m"&gt;9334&lt;/span&gt; -D &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;gitlab,ou&lt;span class="o"&gt;=&lt;/span&gt;users -w gitlab -b &lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;(sAMAccountName=worker2)&amp;#39;&lt;/span&gt;
+&lt;span class="c1"&gt;# extended LDIF&lt;/span&gt;
+&lt;span class="c1"&gt;#&lt;/span&gt;
+&lt;span class="c1"&gt;# LDAPv3&lt;/span&gt;
+&lt;span class="c1"&gt;# base &amp;lt;&amp;gt; with scope subtree&lt;/span&gt;
+&lt;span class="c1"&gt;# filter: (sAMAccountName=worker2)&lt;/span&gt;
+&lt;span class="c1"&gt;# requesting: ALL&lt;/span&gt;
+&lt;span class="c1"&gt;#&lt;/span&gt;
+
+&lt;span class="c1"&gt;# worker2, users&lt;/span&gt;
+dn: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;worker2,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+cn: worker2
+sAMAccountName: worker2
+email: worker2@bigorg2.com
+mail: worker2@bigorg2.com
+userPrincipalName: worker2@users
+objectClass: posixAccount
+memberOf: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;bigorg2,ou&lt;span class="o"&gt;=&lt;/span&gt;orgs
+
+&lt;span class="c1"&gt;# search result&lt;/span&gt;
+search: &lt;span class="m"&gt;2&lt;/span&gt;
+result: &lt;span class="m"&gt;0&lt;/span&gt; Success
+
+&lt;span class="c1"&gt;# numResponses: 2&lt;/span&gt;
+&lt;span class="c1"&gt;# numEntries: 1&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;-b '' (objectClass=groupOfUniqueNames)&lt;/code&gt; : Empty search base will return all the objects. Filter &lt;code&gt;(objectClass=groupOfUniqueNames)&lt;/code&gt; will filter those objects matching this filter&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; ldapsearch -x -h &lt;span class="m"&gt;127&lt;/span&gt;.0.0.1 -p &lt;span class="m"&gt;9334&lt;/span&gt; -D &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;gitlab,ou&lt;span class="o"&gt;=&lt;/span&gt;users -w gitlab -b &lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;(objectClass=groupOfUniqueNames)&amp;#39;&lt;/span&gt;
+&lt;span class="c1"&gt;# extended LDIF&lt;/span&gt;
+&lt;span class="c1"&gt;#&lt;/span&gt;
+&lt;span class="c1"&gt;# LDAPv3&lt;/span&gt;
+&lt;span class="c1"&gt;# base &amp;lt;&amp;gt; with scope subtree&lt;/span&gt;
+&lt;span class="c1"&gt;# filter: (objectClass=groupOfUniqueNames)&lt;/span&gt;
+&lt;span class="c1"&gt;# requesting: ALL&lt;/span&gt;
+&lt;span class="c1"&gt;#&lt;/span&gt;
+
+&lt;span class="c1"&gt;# bigorg1, orgs&lt;/span&gt;
+dn: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;bigorg1,ou&lt;span class="o"&gt;=&lt;/span&gt;orgs
+ou: orgs
+cn: bigorg1
+objectClass: groupOfUniqueNames
+uniqueMember: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;orgman1,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+uniqueMember: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;worker1,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+
+&lt;span class="c1"&gt;# bigorg2, orgs&lt;/span&gt;
+dn: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;bigorg2,ou&lt;span class="o"&gt;=&lt;/span&gt;orgs
+ou: orgs
+cn: bigorg2
+objectClass: groupOfUniqueNames
+uniqueMember: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;orgman2,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+uniqueMember: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;worker2,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+
+&lt;span class="c1"&gt;# search result&lt;/span&gt;
+search: &lt;span class="m"&gt;2&lt;/span&gt;
+result: &lt;span class="m"&gt;0&lt;/span&gt; Success
+
+&lt;span class="c1"&gt;# numResponses: 3&lt;/span&gt;
+&lt;span class="c1"&gt;# numEntries: 2&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;-b 'ou=users' (email=orgman1@bigorg.com)&lt;/code&gt; : Returns user with &lt;code&gt;(email=orgman1@bigorg.com)&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; ldapsearch -x -h &lt;span class="m"&gt;127&lt;/span&gt;.0.0.1 -p &lt;span class="m"&gt;9334&lt;/span&gt; -D &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;gitlab,ou&lt;span class="o"&gt;=&lt;/span&gt;users -w gitlab -b &lt;span class="s1"&gt;&amp;#39;ou=users&amp;#39;&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;(email=orgman1@bigorg.com)&amp;#39;&lt;/span&gt;
+&lt;span class="c1"&gt;# extended LDIF&lt;/span&gt;
+&lt;span class="c1"&gt;#&lt;/span&gt;
+&lt;span class="c1"&gt;# LDAPv3&lt;/span&gt;
+&lt;span class="c1"&gt;# base &amp;lt;ou=users&amp;gt; with scope subtree&lt;/span&gt;
+&lt;span class="c1"&gt;# filter: (email=orgman1@bigorg.com)&lt;/span&gt;
+&lt;span class="c1"&gt;# requesting: ALL&lt;/span&gt;
+&lt;span class="c1"&gt;#&lt;/span&gt;
+
+&lt;span class="c1"&gt;# orgman1, users&lt;/span&gt;
+dn: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;orgman1,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+cn: orgman1
+sAMAccountName: orgman1
+email: orgman1@bigorg.com
+mail: orgman1@bigorg.com
+userPrincipalName: orgman1@users
+objectClass: posixAccount
+memberOf: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;bigorg1,ou&lt;span class="o"&gt;=&lt;/span&gt;orgs
+
+&lt;span class="c1"&gt;# search result&lt;/span&gt;
+search: &lt;span class="m"&gt;2&lt;/span&gt;
+result: &lt;span class="m"&gt;0&lt;/span&gt; Success
+
+&lt;span class="c1"&gt;# numResponses: 2&lt;/span&gt;
+&lt;span class="c1"&gt;# numEntries: 1&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;-b 'ou=orgs' (&amp;amp;(objectClass=groupOfUniqueNames)(|(uniqueMember=cn=worker2,ou=users)(uniqueMember=worker1)))&lt;/code&gt; :  Returns org matching the filter. This is a complex filter with Equality, Or and And operators used&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; ldapsearch -x -h &lt;span class="m"&gt;127&lt;/span&gt;.0.0.1 -p &lt;span class="m"&gt;9334&lt;/span&gt; -D &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;orgman1,ou&lt;span class="o"&gt;=&lt;/span&gt;users -w pointyears -b &lt;span class="s1"&gt;&amp;#39;ou=orgs&amp;#39;&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;(&amp;amp;(objectClass=groupOfUniqueNames)(|(uniqueMember=cn=worker2,ou=users)(uniqueMember=worker1)))&amp;#39;&lt;/span&gt;
+&lt;span class="c1"&gt;# extended LDIF&lt;/span&gt;
+&lt;span class="c1"&gt;#&lt;/span&gt;
+&lt;span class="c1"&gt;# LDAPv3&lt;/span&gt;
+&lt;span class="c1"&gt;# base &amp;lt;ou=orgs&amp;gt; with scope subtree&lt;/span&gt;
+&lt;span class="c1"&gt;# filter: (&amp;amp;(objectClass=groupOfUniqueNames)(|(uniqueMember=cn=worker2,ou=users)(uniqueMember=worker1)))&lt;/span&gt;
+&lt;span class="c1"&gt;# requesting: ALL&lt;/span&gt;
+&lt;span class="c1"&gt;#&lt;/span&gt;
+
+&lt;span class="c1"&gt;# bigorg2, orgs&lt;/span&gt;
+dn: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;bigorg2,ou&lt;span class="o"&gt;=&lt;/span&gt;orgs
+ou: orgs
+cn: bigorg2
+objectClass: groupOfUniqueNames
+uniqueMember: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;orgman2,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+uniqueMember: &lt;span class="nv"&gt;cn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;worker2,ou&lt;span class="o"&gt;=&lt;/span&gt;users
+
+&lt;span class="c1"&gt;# search result&lt;/span&gt;
+search: &lt;span class="m"&gt;2&lt;/span&gt;
+result: &lt;span class="m"&gt;0&lt;/span&gt; Success
+
+&lt;span class="c1"&gt;# numResponses: 2&lt;/span&gt;
+&lt;span class="c1"&gt;# numEntries: 1&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;More information on filters can be found here:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;https://confluence.atlassian.com/kb/how-to-write-ldap-search-filters-792496933.html&lt;/li&gt;
+&lt;li&gt;https://ldapwiki.com/wiki/LDAP%20filters%20Syntax%20and%20Choices&lt;/li&gt;
+&lt;/ul&gt;</content><category term="utils"></category><category term="cloud"></category></entry></feed>

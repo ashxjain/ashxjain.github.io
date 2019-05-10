@@ -1,0 +1,500 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="" />
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="http://ashxjain.github.io/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://ashxjain.github.io/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="http://ashxjain.github.io/theme/font-awesome/css/font-awesome.min.css">
+
+
+    <link href="http://ashxjain.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="ashxjain Atom">
+
+
+
+
+
+<meta name="author" content="Ashish Jain" />
+<meta name="description" content="LDAP search and filters using ldapsearch tool" />
+<meta name="keywords" content="utils, cloud">
+
+<meta property="og:site_name" content="ashxjain"/>
+<meta property="og:title" content="Understanding LDAP Searches"/>
+<meta property="og:description" content="LDAP search and filters using ldapsearch tool"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://ashxjain.github.io/ldap-search.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2019-05-10 00:00:00+05:30"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="http://ashxjain.github.io/author/ashish-jain.html">
+<meta property="article:section" content="utils"/>
+<meta property="article:tag" content="utils"/>
+<meta property="article:tag" content="cloud"/>
+<meta property="og:image" content="/images/sitelogo.png?s=120">
+
+  <title>ashxjain &ndash; Understanding LDAP Searches</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="http://ashxjain.github.io">
+        <img src="/images/sitelogo.png?s=120" alt="Ashish Jain" title="Ashish Jain">
+      </a>
+      <h1><a href="http://ashxjain.github.io">Ashish Jain</a></h1>
+
+<p>Software Engineer</p>
+
+      <ul class="social">
+        <li><a class="sc-linkedin" href="https://linkedin.com/in/ashxjain" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/ashxjain" target="_blank"><i class="fa fa-github"></i></a></li>
+        <li><a class="sc-twitter" href="https://twitter.com/ashxjain" target="_blank"><i class="fa fa-twitter"></i></a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+
+<article class="single">
+  <header>
+      
+    <h1 id="ldap-search">Understanding LDAP Searches</h1>
+    <p>
+          Posted on Fri 10 May 2019 in <a href="http://ashxjain.github.io/category/utils.html">utils</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <p>LDAP is Lightweight Directory Access Protocol, it a client-server based protocol to access directory services. More information can be found on the Internet. The main goal of this article is on understanding how to query LDAP server for data</p>
+<p>I have a LDAP server running on my local machine on port 9389. This is a custom server written in Go and hence it may  not adhere with LDAP standards. We will be using <code>ldapsearch</code> tool for querying ldap server.</p>
+<p>Some details on the common arguments used with <code>ldapsearch</code> for querying:</p>
+<ul>
+<li><code>-x</code> : Does a simple bind, rather than SASL</li>
+<li><code>-h</code>: Address of the LDAP server</li>
+<li><code>-p</code>: Port on which LDAP server is listening</li>
+<li><code>-D</code>: BindDN used for authenticating LDAP queries, consider this as Username</li>
+<li><code>-w</code>: Password for the BindDN</li>
+<li><code>-b</code>: Search base (baseDN), this is the actual serach query</li>
+<li><code>&lt;filter&gt;</code>: Filter used to filter out search results</li>
+</ul>
+<p>Here are some query outputs:</p>
+<p><code>-b ''</code> : Empty search base will return all the objects. There are two set of objects: <code>users</code> &amp; <code>orgs</code></p>
+<p><em>Note: <code>-D</code> &amp; <code>-w</code> are used for authentication</em></p>
+<div class="highlight"><pre><span></span>&gt; ldapsearch -x -h <span class="m">127</span>.0.0.1 -p <span class="m">9334</span> -D <span class="nv">cn</span><span class="o">=</span>worker1,ou<span class="o">=</span>users -w workinghard  -b <span class="s1">&#39;&#39;</span>
+<span class="c1"># extended LDIF</span>
+<span class="c1">#</span>
+<span class="c1"># LDAPv3</span>
+<span class="c1"># base &lt;&gt; with scope subtree</span>
+<span class="c1"># filter: (objectclass=*)</span>
+<span class="c1"># requesting: ALL</span>
+<span class="c1">#</span>
+
+<span class="c1"># admin, users</span>
+dn: <span class="nv">cn</span><span class="o">=</span>admin,ou<span class="o">=</span>users
+cn: admin
+sAMAccountName: admin
+email: admin@example.net
+mail: admin@example.net
+userPrincipalName: admin@users
+objectClass: posixAccount
+memberOf: <span class="nv">ou</span><span class="o">=</span>orgs
+
+<span class="c1"># orgman1, users</span>
+dn: <span class="nv">cn</span><span class="o">=</span>orgman1,ou<span class="o">=</span>users
+cn: orgman1
+sAMAccountName: orgman1
+email: orgman1@bigorg.com
+mail: orgman1@bigorg.com
+userPrincipalName: orgman1@users
+objectClass: posixAccount
+memberOf: <span class="nv">cn</span><span class="o">=</span>bigorg1,ou<span class="o">=</span>orgs
+
+<span class="c1"># worker1, users</span>
+dn: <span class="nv">cn</span><span class="o">=</span>worker1,ou<span class="o">=</span>users
+cn: worker1
+sAMAccountName: worker1
+email: worker1@bigorg1.com
+mail: worker1@bigorg1.com
+userPrincipalName: worker1@users
+objectClass: posixAccount
+memberOf: <span class="nv">cn</span><span class="o">=</span>bigorg1,ou<span class="o">=</span>orgs
+
+<span class="c1"># orgman2, users</span>
+dn: <span class="nv">cn</span><span class="o">=</span>orgman2,ou<span class="o">=</span>users
+cn: orgman2
+sAMAccountName: orgman2
+email: orgman2@bigorg.com
+mail: orgman2@bigorg.com
+userPrincipalName: orgman2@users
+objectClass: posixAccount
+memberOf: <span class="nv">cn</span><span class="o">=</span>bigorg2,ou<span class="o">=</span>orgs
+
+<span class="c1"># worker2, users</span>
+dn: <span class="nv">cn</span><span class="o">=</span>worker2,ou<span class="o">=</span>users
+cn: worker2
+sAMAccountName: worker2
+email: worker2@bigorg2.com
+mail: worker2@bigorg2.com
+userPrincipalName: worker2@users
+objectClass: posixAccount
+memberOf: <span class="nv">cn</span><span class="o">=</span>bigorg2,ou<span class="o">=</span>orgs
+
+<span class="c1"># bigorg1, orgs</span>
+dn: <span class="nv">cn</span><span class="o">=</span>bigorg1,ou<span class="o">=</span>orgs
+ou: orgs
+cn: bigorg1
+objectClass: groupOfUniqueNames
+uniqueMember: <span class="nv">cn</span><span class="o">=</span>orgman1,ou<span class="o">=</span>users
+uniqueMember: <span class="nv">cn</span><span class="o">=</span>worker1,ou<span class="o">=</span>users
+
+<span class="c1"># bigorg2, orgs</span>
+dn: <span class="nv">cn</span><span class="o">=</span>bigorg2,ou<span class="o">=</span>orgs
+ou: orgs
+cn: bigorg2
+objectClass: groupOfUniqueNames
+uniqueMember: <span class="nv">cn</span><span class="o">=</span>orgman2,ou<span class="o">=</span>users
+uniqueMember: <span class="nv">cn</span><span class="o">=</span>worker2,ou<span class="o">=</span>users
+
+<span class="c1"># search result</span>
+search: <span class="m">2</span>
+result: <span class="m">0</span> Success
+
+<span class="c1"># numResponses: 8</span>
+<span class="c1"># numEntries: 7</span>
+</pre></div>
+
+
+<p><code>-b 'ou=users'</code> : Returns all users</p>
+<div class="highlight"><pre><span></span>&gt; ldapsearch -x -h <span class="m">127</span>.0.0.1 -p <span class="m">9334</span> -D <span class="nv">cn</span><span class="o">=</span>worker1,ou<span class="o">=</span>users -w workinghard  -b <span class="s1">&#39;ou=users&#39;</span>
+<span class="c1"># extended LDIF</span>
+<span class="c1">#</span>
+<span class="c1"># LDAPv3</span>
+<span class="c1"># base &lt;ou=users&gt; with scope subtree</span>
+<span class="c1"># filter: (objectclass=*)</span>
+<span class="c1"># requesting: ALL</span>
+<span class="c1">#</span>
+
+<span class="c1"># admin, users</span>
+dn: <span class="nv">cn</span><span class="o">=</span>admin,ou<span class="o">=</span>users
+cn: admin
+sAMAccountName: admin
+email: admin@example.net
+mail: admin@example.net
+userPrincipalName: admin@users
+objectClass: posixAccount
+memberOf: <span class="nv">ou</span><span class="o">=</span>orgs
+
+<span class="c1"># orgman1, users</span>
+dn: <span class="nv">cn</span><span class="o">=</span>orgman1,ou<span class="o">=</span>users
+cn: orgman1
+sAMAccountName: orgman1
+email: orgman1@bigorg.com
+mail: orgman1@bigorg.com
+userPrincipalName: orgman1@users
+objectClass: posixAccount
+memberOf: <span class="nv">cn</span><span class="o">=</span>bigorg1,ou<span class="o">=</span>orgs
+
+<span class="c1"># worker1, users</span>
+dn: <span class="nv">cn</span><span class="o">=</span>worker1,ou<span class="o">=</span>users
+cn: worker1
+sAMAccountName: worker1
+email: worker1@bigorg1.com
+mail: worker1@bigorg1.com
+userPrincipalName: worker1@users
+objectClass: posixAccount
+memberOf: <span class="nv">cn</span><span class="o">=</span>bigorg1,ou<span class="o">=</span>orgs
+
+<span class="c1"># orgman2, users</span>
+dn: <span class="nv">cn</span><span class="o">=</span>orgman2,ou<span class="o">=</span>users
+cn: orgman2
+sAMAccountName: orgman2
+email: orgman2@bigorg.com
+mail: orgman2@bigorg.com
+userPrincipalName: orgman2@users
+objectClass: posixAccount
+memberOf: <span class="nv">cn</span><span class="o">=</span>bigorg2,ou<span class="o">=</span>orgs
+
+<span class="c1"># worker2, users</span>
+dn: <span class="nv">cn</span><span class="o">=</span>worker2,ou<span class="o">=</span>users
+cn: worker2
+sAMAccountName: worker2
+email: worker2@bigorg2.com
+mail: worker2@bigorg2.com
+userPrincipalName: worker2@users
+objectClass: posixAccount
+memberOf: <span class="nv">cn</span><span class="o">=</span>bigorg2,ou<span class="o">=</span>orgs
+
+<span class="c1"># search result</span>
+search: <span class="m">2</span>
+result: <span class="m">0</span> Success
+
+<span class="c1"># numResponses: 6</span>
+<span class="c1"># numEntries: 5</span>
+</pre></div>
+
+
+<p><code>-b 'cn=orgman2,ou=users'</code> : Returns specifc user with <code>cn=orgman2</code></p>
+<div class="highlight"><pre><span></span>&gt; ldapsearch -x -h <span class="m">127</span>.0.0.1 -p <span class="m">9334</span> -D <span class="nv">cn</span><span class="o">=</span>worker1,ou<span class="o">=</span>users -w workinghard  -b <span class="s1">&#39;cn=orgman2,ou=users&#39;</span>
+<span class="c1"># extended LDIF</span>
+<span class="c1">#</span>
+<span class="c1"># LDAPv3</span>
+<span class="c1"># base &lt;cn=orgman2,ou=users&gt; with scope subtree</span>
+<span class="c1"># filter: (objectclass=*)</span>
+<span class="c1"># requesting: ALL</span>
+<span class="c1">#</span>
+
+<span class="c1"># orgman2, users</span>
+dn: <span class="nv">cn</span><span class="o">=</span>orgman2,ou<span class="o">=</span>users
+cn: orgman2
+sAMAccountName: orgman2
+email: orgman2@bigorg.com
+mail: orgman2@bigorg.com
+userPrincipalName: orgman2@users
+objectClass: posixAccount
+memberOf: <span class="nv">cn</span><span class="o">=</span>bigorg2,ou<span class="o">=</span>orgs
+
+<span class="c1"># search result</span>
+search: <span class="m">2</span>
+result: <span class="m">0</span> Success
+
+<span class="c1"># numResponses: 2</span>
+<span class="c1"># numEntries: 1</span>
+</pre></div>
+
+
+<p><code>-b 'ou=orgs'</code> : Returns all orgs</p>
+<div class="highlight"><pre><span></span>&gt; ldapsearch -x -h <span class="m">127</span>.0.0.1 -p <span class="m">9334</span> -D <span class="nv">cn</span><span class="o">=</span>orgman1,ou<span class="o">=</span>users -w pointyears -b <span class="s1">&#39;ou=orgs&#39;</span>
+<span class="c1"># extended LDIF</span>
+<span class="c1">#</span>
+<span class="c1"># LDAPv3</span>
+<span class="c1"># base &lt;ou=orgs&gt; with scope subtree</span>
+<span class="c1"># filter: (objectclass=*)</span>
+<span class="c1"># requesting: ALL</span>
+<span class="c1">#</span>
+
+<span class="c1"># bigorg1, orgs</span>
+dn: <span class="nv">cn</span><span class="o">=</span>bigorg1,ou<span class="o">=</span>orgs
+ou: orgs
+cn: bigorg1
+objectClass: groupOfUniqueNames
+uniqueMember: <span class="nv">cn</span><span class="o">=</span>orgman1,ou<span class="o">=</span>users
+uniqueMember: <span class="nv">cn</span><span class="o">=</span>worker1,ou<span class="o">=</span>users
+
+<span class="c1"># bigorg2, orgs</span>
+dn: <span class="nv">cn</span><span class="o">=</span>bigorg2,ou<span class="o">=</span>orgs
+ou: orgs
+cn: bigorg2
+objectClass: groupOfUniqueNames
+uniqueMember: <span class="nv">cn</span><span class="o">=</span>orgman2,ou<span class="o">=</span>users
+uniqueMember: <span class="nv">cn</span><span class="o">=</span>worker2,ou<span class="o">=</span>users
+
+<span class="c1"># search result</span>
+search: <span class="m">2</span>
+result: <span class="m">0</span> Success
+
+<span class="c1"># numResponses: 3</span>
+<span class="c1"># numEntries: 2</span>
+</pre></div>
+
+
+<p><code>-b 'cn=bigorg1,ou=orgs'</code> : Returns specific org with <code>cn=bigorg1</code> from the list of orgs</p>
+<div class="highlight"><pre><span></span>&gt; ldapsearch -x -h <span class="m">127</span>.0.0.1 -p <span class="m">9334</span> -D <span class="nv">cn</span><span class="o">=</span>orgman1,ou<span class="o">=</span>users -w pointyears -b <span class="s1">&#39;cn=bigorg1,ou=orgs&#39;</span>
+<span class="c1"># extended LDIF</span>
+<span class="c1">#</span>
+<span class="c1"># LDAPv3</span>
+<span class="c1"># base &lt;cn=bigorg1,ou=orgs&gt; with scope subtree</span>
+<span class="c1"># filter: (objectclass=*)</span>
+<span class="c1"># requesting: ALL</span>
+<span class="c1">#</span>
+
+<span class="c1"># bigorg1, orgs</span>
+dn: <span class="nv">cn</span><span class="o">=</span>bigorg1,ou<span class="o">=</span>orgs
+ou: orgs
+cn: bigorg1
+objectClass: groupOfUniqueNames
+uniqueMember: <span class="nv">cn</span><span class="o">=</span>orgman1,ou<span class="o">=</span>users
+uniqueMember: <span class="nv">cn</span><span class="o">=</span>worker1,ou<span class="o">=</span>users
+
+<span class="c1"># search result</span>
+search: <span class="m">2</span>
+result: <span class="m">0</span> Success
+
+<span class="c1"># numResponses: 2</span>
+<span class="c1"># numEntries: 1</span>
+</pre></div>
+
+
+<p><code>-b '' (sAMAccountName=worker2)</code> : Empty search base will return all the objects. Filter <code>(sAMAccountName=worker2)</code> will filter those objects matching this filter</p>
+<div class="highlight"><pre><span></span>&gt; ldapsearch -x -h <span class="m">127</span>.0.0.1 -p <span class="m">9334</span> -D <span class="nv">cn</span><span class="o">=</span>gitlab,ou<span class="o">=</span>users -w gitlab -b <span class="s1">&#39;&#39;</span> <span class="s1">&#39;(sAMAccountName=worker2)&#39;</span>
+<span class="c1"># extended LDIF</span>
+<span class="c1">#</span>
+<span class="c1"># LDAPv3</span>
+<span class="c1"># base &lt;&gt; with scope subtree</span>
+<span class="c1"># filter: (sAMAccountName=worker2)</span>
+<span class="c1"># requesting: ALL</span>
+<span class="c1">#</span>
+
+<span class="c1"># worker2, users</span>
+dn: <span class="nv">cn</span><span class="o">=</span>worker2,ou<span class="o">=</span>users
+cn: worker2
+sAMAccountName: worker2
+email: worker2@bigorg2.com
+mail: worker2@bigorg2.com
+userPrincipalName: worker2@users
+objectClass: posixAccount
+memberOf: <span class="nv">cn</span><span class="o">=</span>bigorg2,ou<span class="o">=</span>orgs
+
+<span class="c1"># search result</span>
+search: <span class="m">2</span>
+result: <span class="m">0</span> Success
+
+<span class="c1"># numResponses: 2</span>
+<span class="c1"># numEntries: 1</span>
+</pre></div>
+
+
+<p><code>-b '' (objectClass=groupOfUniqueNames)</code> : Empty search base will return all the objects. Filter <code>(objectClass=groupOfUniqueNames)</code> will filter those objects matching this filter</p>
+<div class="highlight"><pre><span></span>&gt; ldapsearch -x -h <span class="m">127</span>.0.0.1 -p <span class="m">9334</span> -D <span class="nv">cn</span><span class="o">=</span>gitlab,ou<span class="o">=</span>users -w gitlab -b <span class="s1">&#39;&#39;</span> <span class="s1">&#39;(objectClass=groupOfUniqueNames)&#39;</span>
+<span class="c1"># extended LDIF</span>
+<span class="c1">#</span>
+<span class="c1"># LDAPv3</span>
+<span class="c1"># base &lt;&gt; with scope subtree</span>
+<span class="c1"># filter: (objectClass=groupOfUniqueNames)</span>
+<span class="c1"># requesting: ALL</span>
+<span class="c1">#</span>
+
+<span class="c1"># bigorg1, orgs</span>
+dn: <span class="nv">cn</span><span class="o">=</span>bigorg1,ou<span class="o">=</span>orgs
+ou: orgs
+cn: bigorg1
+objectClass: groupOfUniqueNames
+uniqueMember: <span class="nv">cn</span><span class="o">=</span>orgman1,ou<span class="o">=</span>users
+uniqueMember: <span class="nv">cn</span><span class="o">=</span>worker1,ou<span class="o">=</span>users
+
+<span class="c1"># bigorg2, orgs</span>
+dn: <span class="nv">cn</span><span class="o">=</span>bigorg2,ou<span class="o">=</span>orgs
+ou: orgs
+cn: bigorg2
+objectClass: groupOfUniqueNames
+uniqueMember: <span class="nv">cn</span><span class="o">=</span>orgman2,ou<span class="o">=</span>users
+uniqueMember: <span class="nv">cn</span><span class="o">=</span>worker2,ou<span class="o">=</span>users
+
+<span class="c1"># search result</span>
+search: <span class="m">2</span>
+result: <span class="m">0</span> Success
+
+<span class="c1"># numResponses: 3</span>
+<span class="c1"># numEntries: 2</span>
+</pre></div>
+
+
+<p><code>-b 'ou=users' (email=orgman1@bigorg.com)</code> : Returns user with <code>(email=orgman1@bigorg.com)</code></p>
+<div class="highlight"><pre><span></span>&gt; ldapsearch -x -h <span class="m">127</span>.0.0.1 -p <span class="m">9334</span> -D <span class="nv">cn</span><span class="o">=</span>gitlab,ou<span class="o">=</span>users -w gitlab -b <span class="s1">&#39;ou=users&#39;</span> <span class="s1">&#39;(email=orgman1@bigorg.com)&#39;</span>
+<span class="c1"># extended LDIF</span>
+<span class="c1">#</span>
+<span class="c1"># LDAPv3</span>
+<span class="c1"># base &lt;ou=users&gt; with scope subtree</span>
+<span class="c1"># filter: (email=orgman1@bigorg.com)</span>
+<span class="c1"># requesting: ALL</span>
+<span class="c1">#</span>
+
+<span class="c1"># orgman1, users</span>
+dn: <span class="nv">cn</span><span class="o">=</span>orgman1,ou<span class="o">=</span>users
+cn: orgman1
+sAMAccountName: orgman1
+email: orgman1@bigorg.com
+mail: orgman1@bigorg.com
+userPrincipalName: orgman1@users
+objectClass: posixAccount
+memberOf: <span class="nv">cn</span><span class="o">=</span>bigorg1,ou<span class="o">=</span>orgs
+
+<span class="c1"># search result</span>
+search: <span class="m">2</span>
+result: <span class="m">0</span> Success
+
+<span class="c1"># numResponses: 2</span>
+<span class="c1"># numEntries: 1</span>
+</pre></div>
+
+
+<p><code>-b 'ou=orgs' (&amp;(objectClass=groupOfUniqueNames)(|(uniqueMember=cn=worker2,ou=users)(uniqueMember=worker1)))</code> :  Returns org matching the filter. This is a complex filter with Equality, Or and And operators used</p>
+<div class="highlight"><pre><span></span>&gt; ldapsearch -x -h <span class="m">127</span>.0.0.1 -p <span class="m">9334</span> -D <span class="nv">cn</span><span class="o">=</span>orgman1,ou<span class="o">=</span>users -w pointyears -b <span class="s1">&#39;ou=orgs&#39;</span> <span class="s1">&#39;(&amp;(objectClass=groupOfUniqueNames)(|(uniqueMember=cn=worker2,ou=users)(uniqueMember=worker1)))&#39;</span>
+<span class="c1"># extended LDIF</span>
+<span class="c1">#</span>
+<span class="c1"># LDAPv3</span>
+<span class="c1"># base &lt;ou=orgs&gt; with scope subtree</span>
+<span class="c1"># filter: (&amp;(objectClass=groupOfUniqueNames)(|(uniqueMember=cn=worker2,ou=users)(uniqueMember=worker1)))</span>
+<span class="c1"># requesting: ALL</span>
+<span class="c1">#</span>
+
+<span class="c1"># bigorg2, orgs</span>
+dn: <span class="nv">cn</span><span class="o">=</span>bigorg2,ou<span class="o">=</span>orgs
+ou: orgs
+cn: bigorg2
+objectClass: groupOfUniqueNames
+uniqueMember: <span class="nv">cn</span><span class="o">=</span>orgman2,ou<span class="o">=</span>users
+uniqueMember: <span class="nv">cn</span><span class="o">=</span>worker2,ou<span class="o">=</span>users
+
+<span class="c1"># search result</span>
+search: <span class="m">2</span>
+result: <span class="m">0</span> Success
+
+<span class="c1"># numResponses: 2</span>
+<span class="c1"># numEntries: 1</span>
+</pre></div>
+
+
+<p>More information on filters can be found here:</p>
+<ul>
+<li>https://confluence.atlassian.com/kb/how-to-write-ldap-search-filters-792496933.html</li>
+<li>https://ldapwiki.com/wiki/LDAP%20filters%20Syntax%20and%20Choices</li>
+</ul>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="http://ashxjain.github.io/tag/utils.html">utils</a>
+      <a href="http://ashxjain.github.io/tag/cloud.html">cloud</a>
+    </p>
+  </div>
+
+
+
+
+
+</article>
+
+    <footer>
+<p>&copy;  2018</p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " ashxjain ",
+  "url" : "http://ashxjain.github.io",
+  "image": "/images/sitelogo.png?s=120",
+  "description": "Ashish Jain's Thoughts and Writings"
+}
+</script>
+
+</body>
+</html>

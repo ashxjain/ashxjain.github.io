@@ -1,0 +1,585 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="" />
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="http://ashxjain.github.io/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://ashxjain.github.io/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="http://ashxjain.github.io/theme/font-awesome/css/font-awesome.min.css">
+
+
+    <link href="http://ashxjain.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="ashxjain Atom">
+
+
+
+
+
+<meta name="author" content="Ashish Jain" />
+<meta name="description" content="Understanding T3D models" />
+<meta name="keywords" content="ml, reinforcement-learning">
+
+<meta property="og:site_name" content="ashxjain"/>
+<meta property="og:title" content="T3D [Twin Delayed DDPG] Reinforcement Learning"/>
+<meta property="og:description" content="Understanding T3D models"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://ashxjain.github.io/t3d-reinforcement-learning.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2020-04-04 00:00:00+05:30"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="http://ashxjain.github.io/author/ashish-jain.html">
+<meta property="article:section" content="ml"/>
+<meta property="article:tag" content="ml"/>
+<meta property="article:tag" content="reinforcement-learning"/>
+<meta property="og:image" content="/images/sitelogo.png?s=120">
+
+  <title>ashxjain &ndash; T3D [Twin Delayed DDPG] Reinforcement Learning</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="http://ashxjain.github.io">
+        <img src="/images/sitelogo.png?s=120" alt="Ashish Jain" title="Ashish Jain">
+      </a>
+      <h1><a href="http://ashxjain.github.io">Ashish Jain</a></h1>
+
+<p>Software Engineer</p>
+
+      <ul class="social">
+        <li><a class="sc-linkedin" href="https://linkedin.com/in/ashxjain" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/ashxjain" target="_blank"><i class="fa fa-github"></i></a></li>
+        <li><a class="sc-twitter" href="https://twitter.com/ashxjain" target="_blank"><i class="fa fa-twitter"></i></a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+
+<article class="single">
+  <header>
+      
+    <h1 id="t3d-reinforcement-learning">T3D [Twin Delayed DDPG] Reinforcement Learning</h1>
+    <p>
+          Posted on Sat 04 April 2020 in <a href="http://ashxjain.github.io/category/ml.html">ml</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <p>Understanding Implementation Of Twin Delayed DDPG (T3D)</p>
+<p>T3D is a reinforcement learning model, based on <a href="https://arxiv.org/pdf/1602.01783.pdf">Asynchronous Advantage Actor-Critic Algorithm</a> (A3C). But before we understand and implement T3D, let's get a quick understanding of what is reinforcement learning, what is A3C model and why to use A3C based models.</p>
+<p>In reinforcement learning, an agent/program is continuously learning from its environment. It learns on what to do, how to map situations to actions with the aim to maximize rewards it acheive by performing right actions for particular situations.</p>
+<p>As we all know about the Q equation derived from famous Bellman Equation, which is the basis for reinforcement learning:</p>
+<p><img alt="BellmanEqn" src="content/images/BellmanEqn.svg" /></p>
+<p>So in above equation:</p>
+<ul>
+<li>Q (s, a) = Q-value of being in state (s) and reaching state (s') by taking an action (a)</li>
+<li>R (s, a) = Reward you get after taking that action and reaching state (s') from state (s)</li>
+<li>γ (gamma) = the discounting factor (a hyperparameter), to balance the immediate reward and future reward</li>
+<li>Q<sub>max</sub> (s', a') = max Q value across all actions (a') taken from state (s')</li>
+</ul>
+<p>Q-value can be considered as a value associated with a specific action. Max of multiple Q-values for multiple actions is what is considered as action for the agent.</p>
+<p>For solving complex problems, we use a Deep Q Network (DQN), to predict Q-values as opposed to using a value table based model.</p>
+<p>A DQN takes in state as input and outputs Q values for all possible actions.</p>
+<p><img alt="DQN" src="content/images/DQN.png" /></p>
+<p>Since there are discrete number of actions, it will not work for continuous action spaces. For example, it works fine if say a car's action is to move 5 degrees left or right or no movement at all. But if it has be a range like -5 to +5 degrees, then this will not work. Hence comes in A3C models.</p>
+<p><img alt="A3C" src="content/images/A3C.png" /></p>
+<p>A3C models is an extension to DQN model, where we have two models: Actor &amp; Critic.</p>
+<p>Actor is trying to predict an action based on the current state (policy network), and critic is trying to predict the V-Values (max Q-Values) given the state and actions. Critic model ensures that the actor model takes right action as part of training process. To make it work for continuous action spaces, the value of actor model (max output) is actually used for training. This value defines the action value. More details on why actor-critic model and its training aspects is covered as part of T3D explanation.</p>
+<p>In T3D, twin stands for "2 Critic models", hence here we have 1 Actor, 2 Critic models.</p>
+<p><img alt="T3D-HighLevel" src="content/images/T3D-HighLevel.png" /></p>
+<p>Two critic models gives stability to our network. More explanation on this and how it is trained is covered step-by-step with actual implementation.</p>
+<h2>Step 1: Initialization</h2>
+<p>Import all the required libraries. A note on few important libraries:</p>
+<ul>
+<li><a href="https://pytorch.org">https://pytorch.org</a>: We use PyTorch for our neural network implementation</li>
+<li><a href="https://gym.openai.com">Gym</a>: This provides a variety of environments like Atari, MuJoCo, etc for our reinforcement learning experiments</li>
+<li><a href="https://github.com/benelot/pybullet-gym">https://github.com/benelot/pybullet-gym</a>: Library providing physics based environment for our experiment</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">pybullet_envs</span>
+<span class="kn">import</span> <span class="nn">gym</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">from</span> <span class="nn">gym</span> <span class="kn">import</span> <span class="n">wrappers</span>
+<span class="kn">from</span> <span class="nn">torch.autograd</span> <span class="kn">import</span> <span class="n">Variable</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
+</pre></div>
+
+
+<h2>Step 2: Define Replay Memory</h2>
+<ul>
+<li>
+<p>This is a fixed size array storing multiple experiences.</p>
+</li>
+<li>
+<p>An experience (aka transition) is defined by the following:</p>
+</li>
+<li>s: current state in which the agent is</li>
+<li>a: action the agent takes to go to next state</li>
+<li>s': new state agent reaches after taking an action (a)</li>
+<li>
+<p>r: reward an agent receive for going from state (s) to state (s') by taking action (a)</p>
+</li>
+<li>
+<p>Initially, agent plays with the environment randomly and fills in replay memory.</p>
+</li>
+<li>
+<p>Then during training, a batch of experiences is sampled randomly to train the agent.</p>
+</li>
+<li>
+<p>Also this memory is simultaneously filled as and when agent explores the environment.</p>
+</li>
+<li>
+<p>If memory is full, then first entry is removed and new entry is added.</p>
+</li>
+</ul>
+<p><img alt="ReplayMemory" src="content/images/ReplayMemory.png" /></p>
+<ul>
+<li>Replay memory size is usually initialised to a large number, in our case 1 Million, so that agent can learn from variety of experiences</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ReplayBuffer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_size</span> <span class="o">=</span> <span class="mf">1e6</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">storage</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_size</span> <span class="o">=</span> <span class="n">max_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ptr</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transition</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_size</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ptr</span><span class="p">)]</span> <span class="o">=</span> <span class="n">transition</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ptr</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ptr</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_size</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">transition</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+        <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="p">),</span> <span class="n">batch_size</span><span class="p">)</span>
+        <span class="n">batch_states</span><span class="p">,</span> <span class="n">batch_next_states</span><span class="p">,</span> <span class="n">batch_actions</span><span class="p">,</span> <span class="n">batch_rewards</span><span class="p">,</span> \
+                <span class="n">batch_dones</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ind</span><span class="p">:</span>
+            <span class="n">state</span><span class="p">,</span> <span class="n">next_state</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">batch_states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">copy</span> <span class="o">=</span> <span class="kc">False</span><span class="p">))</span>
+            <span class="n">batch_next_states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">next_state</span><span class="p">,</span> <span class="n">copy</span> <span class="o">=</span> <span class="kc">False</span><span class="p">))</span>
+            <span class="n">batch_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">copy</span> <span class="o">=</span> <span class="kc">False</span><span class="p">))</span>
+            <span class="n">batch_rewards</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">reward</span><span class="p">,</span> <span class="n">copy</span> <span class="o">=</span> <span class="kc">False</span><span class="p">))</span>
+            <span class="n">batch_dones</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">done</span><span class="p">,</span> <span class="n">copy</span> <span class="o">=</span> <span class="kc">False</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">batch_states</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">batch_next_states</span><span class="p">),</span> \
+                <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">batch_actions</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">batch_rewards</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> \
+                <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">batch_dones</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+
+<ul>
+<li>Above we define a <code>sample</code> function, as during training this becomes our dataset. Here we randomly sample a <strong>batch</strong> of experiences and use that as model inputs and for loss calculations.</li>
+</ul>
+<h2>Step 3: Define Actor-Critic Models</h2>
+<ul>
+<li>Following defines our network model for Actor &amp; Critic. It is a simple dense network, with RELU used as activation layer.</li>
+<li>For Actor model, our input is state and output is actions. Hence we specify <code>state_dims</code> and <code>action_dim</code> in below code.</li>
+<li><strong>Note:</strong> <code>max_action</code> is used to clamp the action value in case we add too much gaussian noise. More on this is explained further. So to limit the output in <code>-max_action</code> to <code>+max_action</code> range, we use <code>tanh</code> to confine the network to <code>-1</code> to <code>+1</code> range and then multiply it with <code>max_action</code>, thereby getting our output in the required range.</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Actor</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_dims</span><span class="p">,</span> <span class="n">action_dim</span><span class="p">,</span> <span class="n">max_action</span><span class="p">):</span>
+        <span class="c1"># max_action is to clip in case we added too much noise</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Actor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span> <span class="c1"># activate the inheritance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">state_dims</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_3</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="n">action_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_action</span> <span class="o">=</span> <span class="n">max_action</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_2</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_action</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_3</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">x</span>
+</pre></div>
+
+
+<ul>
+<li>For Critic model, since we need two models, we are definining them in same class but with different output variables. This way it is easy for us to write and maintain the code.</li>
+<li>Here, our input is state and action, hence we pass both <code>state_dims</code> &amp; <code>action_dim</code> as part of initialisation. During training, input to this model is concatenation of both state and action.</li>
+<li><strong>Note:</strong> we also define a separate network Q1, which is actually same as first critic network. This is used for loss calculation and updating weights of Actor model. More on this is covered in following steps.</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Critic</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_dims</span><span class="p">,</span> <span class="n">action_dim</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Critic</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span> <span class="c1"># activate the inheritance</span>
+        <span class="c1"># First Critic Network</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">state_dims</span> <span class="o">+</span> <span class="n">action_dim</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_3</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="n">action_dim</span><span class="p">)</span>
+        <span class="c1"># Second Critic Network</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_4</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">state_dims</span> <span class="o">+</span> <span class="n">action_dim</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_5</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_6</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="n">action_dim</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span> <span class="c1"># x - state, u - action</span>
+        <span class="n">xu</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># 1 for vrtcl concatenation, 0 for Hzntl</span>
+        <span class="c1"># forward propagation on first critic</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_1</span><span class="p">(</span><span class="n">xu</span><span class="p">))</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_2</span><span class="p">(</span><span class="n">x1</span><span class="p">))</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_3</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span>
+        <span class="c1"># forward propagation on second critic</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_4</span><span class="p">(</span><span class="n">xu</span><span class="p">))</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_5</span><span class="p">(</span><span class="n">x2</span><span class="p">))</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_6</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span>
+
+    <span class="k">def</span> <span class="nf">Q1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span> <span class="c1"># x - state, u - action</span>
+        <span class="c1"># This is used for updating the Q values</span>
+        <span class="n">xu</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">u</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># 1 for vrtcl concatenation, 0 for Hzntl</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_1</span><span class="p">(</span><span class="n">xu</span><span class="p">))</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_2</span><span class="p">(</span><span class="n">x1</span><span class="p">))</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_3</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x1</span>
+</pre></div>
+
+
+<ul>
+<li><strong>Device selection:</strong> If our model is trained on CPU, then below code should take care of setting <code>device='cpu'</code>, similarly for GPU. That way we can write our code without specifically mentioning a particular device.</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>## Training our model</p>
+<h2>Step 4: Training Initializations</h2>
+<ul>
+<li>Our whole training process is built in a class. In this class, as part of <code>__init__</code>, we initialize the following networks:
+  <img alt="T3D" src="content/images/T3D.png" /></li>
+<li>As part of initialization, Actor Target model weights are same as Actor model. Similary Critic Target models weight are same as correspoding Critic models.</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">T3D</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_dims</span><span class="p">,</span> <span class="n">action_dim</span><span class="p">,</span> <span class="n">max_action</span><span class="p">):</span>
+        <span class="c1"># making sure our T3D class can work with any env</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">actor</span> <span class="o">=</span> <span class="n">Actor</span><span class="p">(</span><span class="n">state_dims</span><span class="p">,</span> <span class="n">action_dim</span><span class="p">,</span> <span class="n">max_action</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">actor_target</span> <span class="o">=</span> <span class="n">Actor</span><span class="p">(</span><span class="n">state_dims</span><span class="p">,</span> <span class="n">action_dim</span><span class="p">,</span> <span class="n">max_action</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="c1"># initializing with model weights to keep the same</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">actor_target</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actor</span><span class="o">.</span><span class="n">state_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">actor_optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actor</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_action</span> <span class="o">=</span> <span class="n">max_action</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">critic</span> <span class="o">=</span> <span class="n">Critic</span><span class="p">(</span><span class="n">state_dims</span><span class="p">,</span> <span class="n">action_dim</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">critic_target</span> <span class="o">=</span> <span class="n">Critic</span><span class="p">(</span><span class="n">state_dims</span><span class="p">,</span> <span class="n">action_dim</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="c1"># initializing with model weights to keep the same</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">critic_target</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">critic</span><span class="o">.</span><span class="n">state_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">critic_optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">critic</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
+</pre></div>
+
+
+<h2>Step 5: Action Selection</h2>
+<ul>
+<li>In every training iteration, as and when we sample batch of experiences from replay memory, our agent needs to take an action during that iteration. This is part of online training. The action which agent takes is selected by calling <code>select_action</code>. Agent's current state is passed to Actor model to get next action. This way agent is getting trained as well simultaneously performing action.</li>
+</ul>
+<div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">select_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="c1"># need to convert to numpy, for clipping</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">actor</span><span class="p">(</span><span class="n">state</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">Flatten</span><span class="p">()</span>
+</pre></div>
+
+
+<h2>Step 6: Train Method</h2>
+<ul>
+<li>Train method is defined with following arguments:</li>
+<li>replay_buffer: This is the replay memory in which we are storing the experiences</li>
+<li>iterations: Number of iterations to train the network</li>
+<li>batch_size: Number of experiences to be sampled from replay memory</li>
+<li>discount: Discounting factor used for calculating target Q-value which will be used for loss calculations</li>
+<li>tau: Hyperparameter used to update weights of target network from model network using Polyak Averaging</li>
+<li>policy_noise: Noise added to Actor Target output, when passed to Critic Target networks. This way we achieve exploration</li>
+<li>noise_clip: Clips the policy_noise to maintain it in a specific range</li>
+<li>policy_freq: Because the target network weights and Actor model weight updation is delayed, we define this parameter to control when to update the weights. If 2, then after every two iterations.</li>
+<li>First step in training is to randomly sample batch of experiences from replay memory.</li>
+<li><strong>Note:</strong> the environment also provides <code>done</code> variable to indicate if an episode is done or not.</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">replay_buffer</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">discount</span><span class="o">=</span><span class="mf">0.99</span><span class="p">,</span>
+        <span class="n">tau</span> <span class="o">=</span> <span class="mf">0.005</span><span class="p">,</span> <span class="n">policy_noise</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">noise_clip</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">policy_freq</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iterations</span><span class="p">):</span>
+        <span class="c1"># Sample from a batch of transitions (s, s&#39;, a, r) from the memory</span>
+        <span class="n">batch_states</span><span class="p">,</span> <span class="n">batch_next_states</span><span class="p">,</span> <span class="n">batch_actions</span><span class="p">,</span> <span class="n">batch_rewards</span><span class="p">,</span> <span class="n">batch_dones</span> \
+            <span class="o">=</span> <span class="n">replay_buffer</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">batch_size</span><span class="p">)</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">batch_states</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">next_state</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">batch_next_states</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">batch_actions</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">reward</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">batch_rewards</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">batch_dones</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+</pre></div>
+
+
+<h2>Step 7: Perform Action In The Environment</h2>
+<p>Actor network predicts next action for the agent to take from current state. This is the step agent performs in the environment and is visible on the game/environment screen. And the resulting state and reward is all stored as a new experience in the replay memory. This step is just to proceed the agent in the game/environment and to add entry in the replay memory.</p>
+<h2>Step 8: Train Actor Network</h2>
+<ul>
+<li>
+<p>The main aim is to train Actor network as it provides next action to be performed in the environment.</p>
+</li>
+<li>
+<p>But to train actor network, we first need to get output from Critic network and hence we must first train Critic network. And Critic network is trained by Critic Target network, which in turn needs output from Actor Target network. So let's break this down and first see how to train Critic Network</p>
+</li>
+</ul>
+<p><img alt="T3D-Train-Order" src="content/images/T3D-Train-Order.png" /></p>
+<h2>Step 7: Training Critic Network</h2>
+<p>Critic network takes in (s, a) from the batch. And outputs Q-value.</p>
+<p>For loss calculation we first need to find target Q-value. And that is calculated using Bellman's equation:</p>
+<p><img alt="BellmanEqn" src="content/images/BellmanEqn.svg" /></p>
+<p><img alt="T3D-CriticNetworkWeightsBackProp" src="content/images/T3D-CriticNetworkWeightsBackProp.png" /></p>
+<h5>Step 7.1: Calculating target Q-Value</h5>
+<p>So, we need the following to calculate target Q-value:</p>
+<ul>
+<li>R (s, a): reward for taking action (a) from current state (s), we have this value from our batch entry (experience)</li>
+<li>γ (gamma): Discounting factor is already passed as input, defined as hyperparameter</li>
+<li>
+<p>Q<sub>max</sub> (s', a'): This is the Q-value for next state (a') by performing next action (a'). To find this Q-value of a future state, we need target network. Because we know neural networks are good approximaters, we can use the same model for next state Q calculations</p>
+</li>
+<li>
+<p>We already have <code>R(s,a), γ , s'</code> , but we need next action (a') to be performed from state (s')</p>
+</li>
+</ul>
+<h5>Step 7.1.1: Next Action (a')</h5>
+<ul>
+<li>We get next action from our Actor Target network:</li>
+</ul>
+<div class="highlight"><pre><span></span>        <span class="c1"># From the next state s&#39;, the actor target plays the next action a&#39;</span>
+        <span class="n">next_action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">actor_target</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">next_state</span><span class="p">)</span>
+</pre></div>
+
+
+<h5>Step 7.1.2: Add Gaussian Noise To Next Action (a')</h5>
+<ul>
+<li>We add Gaussian noise to next action (a') and clamp it between <code>-max_action</code> to <code>+max_action</code>.</li>
+<li>This allows our agent to explore the environment and learn better.</li>
+</ul>
+<div class="highlight"><pre><span></span>        <span class="c1"># We add Gaussian noise to this next action a&#39; and</span>
+        <span class="c1"># we clamp it in a range of values supported by the environment</span>
+        <span class="n">noise</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">next_action</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">normal_</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">policy_noise</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">noise</span> <span class="o">=</span> <span class="n">noise</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="o">-</span><span class="n">noise_clip</span><span class="p">,</span> <span class="n">noise_clip</span><span class="p">)</span>
+        <span class="n">next_action</span> <span class="o">=</span> <span class="p">(</span><span class="n">next_action</span> <span class="o">+</span> <span class="n">noise</span><span class="p">)</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">max_action</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_action</span><span class="p">)</span>
+</pre></div>
+
+
+<h5>Step 7.1.3: Fetch Q-Values From Both Critic Target Networks</h5>
+<ul>
+<li>So we pass (s', a') to Critic Target network and get the required Q value for target Q value calculations.</li>
+<li>But using a single Critic Target network's output, makes model too optimistic. And hence we use another Critic Target network, and take the minimum of both of the networks. So that we are not too optimistic with the Q-value, and it gives network enough time to learn Q-values and hence adds stability.</li>
+<li>Hence our target Q-value formula will now be: <code>Qt = r + gamma * min(Qt1, Qt2).</code></li>
+</ul>
+<div class="highlight"><pre><span></span>        <span class="c1"># The two Critic targets take each the couple (s&#39;, a&#39;)</span>
+        <span class="c1"># as input and return two Q values, Qt1(s&#39;, a&#39;) and</span>
+        <span class="c1"># Qt2(s&#39;, a&#39;) as outputs</span>
+        <span class="n">target_Q1</span><span class="p">,</span> <span class="n">target_Q2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">critic_target</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">next_state</span><span class="p">,</span> <span class="n">next_action</span><span class="p">)</span>
+
+        <span class="c1"># Keep the minimum of these two Q-Values</span>
+        <span class="n">target_Q</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">target_Q1</span><span class="p">,</span> <span class="n">target_Q2</span><span class="p">)</span>
+</pre></div>
+
+
+<ul>
+<li>Now that we have this Q-value from Critic Target Network, we calculate our final target Q-Value.</li>
+<li><strong>Note:</strong> That we are only supposed to run this if the episode is over, which means we need to integrate <code>done</code> here. Also, we must detach target Q-Value as it would create it's own computation graph without detaching Qt1/Qt2 from their own graph and hence complicating things.</li>
+</ul>
+<div class="highlight"><pre><span></span>        <span class="n">target_Q</span> <span class="o">=</span> <span class="n">reward</span> <span class="o">+</span> <span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="n">done</span><span class="p">)</span> <span class="o">*</span> <span class="n">discount</span> <span class="o">*</span> <span class="n">target_Q</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+</pre></div>
+
+
+<h5>Step 7.2: Predicting Q-Values from Critic Network</h5>
+<ul>
+<li>Now that we have target Q-Value, let's get predicted Q-values from both the Critic networks and calculate critic loss.</li>
+<li>Critic Loss is combined mean squared loss (MSE) of Q-value from critic network 1 and target-Q &amp; MSE of Q-value from critic network 2 and target-Q.</li>
+</ul>
+<div class="highlight"><pre><span></span>        <span class="c1"># Two critic models take (s, a) as input and return two Q-Vales</span>
+        <span class="n">current_Q1</span><span class="p">,</span> <span class="n">current_Q2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">critic</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span>
+
+        <span class="c1"># Compute the critic loss</span>
+        <span class="n">critic_loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">current_Q1</span><span class="p">,</span> <span class="n">target_Q</span><span class="p">)</span> <span class="o">+</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">current_Q2</span><span class="p">,</span> <span class="n">target_Q</span><span class="p">)</span>
+</pre></div>
+
+
+<ul>
+<li>We now backpropagte and update Critic Network weights.</li>
+</ul>
+<div class="highlight"><pre><span></span>        <span class="c1"># Backpropagate this critic loss and update the parameters</span>
+        <span class="c1"># of two Critic models with an Adam optimizer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">critic_optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span> <span class="c1"># initializing the gradients to zero</span>
+        <span class="n">critic_loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span> <span class="c1"># computing the gradients</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">critic_optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span> <span class="c1"># performing weight updates</span>
+</pre></div>
+
+
+<h2>Step 8: Actor Network Backpropagation</h2>
+<ul>
+<li>Now that we have Critic network updated with new weights. Once in every policy_freq (=2) iteration, we update Actor network weights.</li>
+</ul>
+<p><img alt="T3D-ActorNetworkGradAsc" src="content/images/T3D-ActorNetworkGradAsc.png" /></p>
+<ul>
+<li>Actor network uses Critic network 1 (Q1)'s output for loss calculation. This loss is maximized using Gradient Ascent. We maximize loss here because we want to maximize Q-value and max Q-value is the action taken by the agent.</li>
+</ul>
+<div class="highlight"><pre><span></span>    <span class="c1"># Once every two iterations, we update our Actor model by performing</span>
+    <span class="c1"># gradient ASCENT on the output of the first Critic model</span>
+    <span class="k">if</span> <span class="n">it</span> <span class="o">%</span> <span class="n">policy_freq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># This is DPG part</span>
+        <span class="n">actor_loss</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">critic</span><span class="o">.</span><span class="n">Q1</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">actor</span><span class="p">(</span><span class="n">state</span><span class="p">))</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">actor_optimizer</span><span class="o">.</span><span class="n">grad_zero</span><span class="p">()</span>
+        <span class="n">actor_loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">actor_optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+</pre></div>
+
+
+<h2>Step 9: Target Networks Weights Updation</h2>
+<ul>
+<li>Once the actor network weights are updated, after next two iterations, target networks' weights are updated from their corresponding model networks using Polyak Averaging.</li>
+</ul>
+<p><img alt="T3D-PolyakAvg" src="content/images/T3D-PolyakAvg.png" /></p>
+<ul>
+<li><strong>Polyak Averaging:</strong> The essence of this equation is to take little of new weights and keep most of old weights. Tau is a very small number.</li>
+</ul>
+<p><img alt="PolyakAvgEqn" src="content/images/PolyakAvgEqn.svg" /></p>
+<ul>
+<li>
+<p>Above equation can be rewritten as:
+                                                                 W<sub>new</sub> = (tau) W<sub>in</sub> + (1 - tau) W<sub>old </sub></p>
+</li>
+<li>
+<p><strong>Note:</strong> above W is actual weights and not delta of weights.</p>
+</li>
+<li>
+<p>Here we are biased on old weights and expecting new weights to come in continously and take the network in right direction.</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span>            <span class="c1"># Once in every two iterations, we update our Actor Target</span>
+            <span class="c1"># by Polyak Averaging</span>
+            <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">target_param</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actor</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">actor_target</span><span class="o">.</span><span class="n">parameters</span><span class="p">()):</span>
+                <span class="n">target_param</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">tau</span> <span class="o">*</span> <span class="n">param</span><span class="o">.</span><span class="n">data</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">tau</span><span class="p">)</span> <span class="o">*</span> <span class="n">target_param</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+            <span class="c1"># Once in every two iterations, we update our Critic Target</span>
+            <span class="c1"># by Polyak Averaging</span>
+            <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">target_param</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">critic</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">critic_target</span><span class="o">.</span><span class="n">parameters</span><span class="p">()):</span>
+                <span class="n">target_param</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">tau</span> <span class="o">*</span> <span class="n">param</span><span class="o">.</span><span class="n">data</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">tau</span><span class="p">)</span> <span class="o">*</span> <span class="n">target_param</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+
+
+<p>This is one iteration. We'll perform multiple iterations until we finish an episode or reach the end of iterations count.</p>
+<h2>Summary</h2>
+<p>Here's a summary in terms of first 4 iterations:</p>
+<p><strong>Iteration-1:</strong></p>
+<ol>
+<li>Select Action:</li>
+<li>Agent is started with initial state <code>s</code></li>
+<li>Agent selects new action using <strong>Actor Network</strong> : <code>s -&gt; [Actor] -&gt; a</code> </li>
+<li>Agent reaches new state <code>s'</code> after performing action <code>a</code>. Also agent receives reward <code>r</code> for reaching state <code>s'</code></li>
+<li>Store <code>[s, a, s', r]</code> as experience in replay memory</li>
+<li>Randomly sample batch of experiences from replay memory. We'll consider single experience from batch data for understanding: <code>[s, a, s', r]</code></li>
+<li>Train both the <strong>Critic Networks</strong>:</li>
+<li>Predict Q-values:<ul>
+<li><code>(s, a) -&gt; [Critic-1] -&gt; Q-v1</code></li>
+<li><code>(s, a) -&gt; [Critic-2] -&gt; Q-v2</code></li>
+</ul>
+</li>
+<li>Calculate Target Q values:<ul>
+<li>Get next-action <code>a'</code> from <strong>Target Actor Network</strong>: <code>s' -&gt; [Actor-Target] -&gt; a'</code></li>
+<li><code>(s', a') -&gt; [Critic-1] -&gt; Qt'-v1</code></li>
+<li><code>(s', a') -&gt; [Critic-2] -&gt; Qt'-v2</code></li>
+<li>Get target Q-value: <code>Qt = r + (1-done)*gamma * min(Qt'-v1, Qt'-v2)</code></li>
+</ul>
+</li>
+<li>Calculate critic loss function, minimize it:<ul>
+<li><code>critic_loss = F.mse_loss(Q-v1, Qt) + F.mse_loss(Q-v2, Qt)</code></li>
+<li>Perform backpropagation</li>
+</ul>
+</li>
+</ol>
+<p><strong>Iteration-2:</strong></p>
+<ul>
+<li>
+<p>Follow steps 1-3 as mentioned above.</p>
+</li>
+<li>
+<p>Train <strong>Actor Network</strong>:</p>
+</li>
+<li>Calculate actor loss: <ul>
+<li>Get next-action <code>a'</code> from <strong>Actor Network</strong>: <code>s -&gt; [Actor] -&gt; a</code></li>
+<li>Get Q1 value from <strong>Critic Network 1</strong>: <code>(s, a) -&gt; [Critic-1] -&gt; Q-v1</code></li>
+<li>Actor loss: <code>actor_loss = -(Q-v1).mean()</code></li>
+</ul>
+</li>
+<li>Perform backpropagation</li>
+</ul>
+<p><strong>Iteration-3:</strong></p>
+<ul>
+<li>Follow steps 1-3 as mentioned above.</li>
+</ul>
+<p><strong>Iteration-4:</strong></p>
+<ul>
+<li>
+<p>Follow steps 1-4 as mentioned above.</p>
+</li>
+<li>
+<p>Update Target Networks' weight by Polyak Averaging:</p>
+</li>
+<li><strong>Actor Target Network</strong>:<ul>
+<li>Update weights from Actor Network</li>
+<li>Actor-Target<sub>new</sub> = (tau) Actor<sub>new</sub> + (1 - tau) Actor-Target<sub>old </sub></li>
+</ul>
+</li>
+<li><strong>Critic Target Network 1</strong>:<ul>
+<li>Update weights from Critic Network 1</li>
+<li>Critic-Target-1<sub>new</sub> = (tau) Critic-1<sub>new</sub> + (1 - tau) Critic-Target-1<sub>old </sub></li>
+</ul>
+</li>
+<li><strong>Critic Target Network 2</strong>:<ul>
+<li>Update weights from Critic Network 2</li>
+<li>Critic-Target-2<sub>new</sub> = (tau) Critic-2<sub>new</sub> + (1 - tau) Critic-Target-2<sub>old </sub></li>
+</ul>
+</li>
+</ul>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="http://ashxjain.github.io/tag/ml.html">ml</a>
+      <a href="http://ashxjain.github.io/tag/reinforcement-learning.html">reinforcement-learning</a>
+    </p>
+  </div>
+
+
+
+
+
+</article>
+
+    <footer>
+<p>&copy;  2018</p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " ashxjain ",
+  "url" : "http://ashxjain.github.io",
+  "image": "/images/sitelogo.png?s=120",
+  "description": "Ashish Jain's Thoughts and Writings"
+}
+</script>
+
+</body>
+</html>

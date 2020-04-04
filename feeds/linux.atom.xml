@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>ashxjain - linux</title><link href="http://ashxjain.github.io/" rel="alternate"></link><link href="http://ashxjain.github.io/feeds/linux.atom.xml" rel="self"></link><id>http://ashxjain.github.io/</id><updated>2018-09-05T00:00:00+05:30</updated><subtitle>Software Engineer</subtitle><entry><title>Modify environment variables of a running process</title><link href="http://ashxjain.github.io/set-live-env-using-gdb.html" rel="alternate"></link><published>2018-09-05T00:00:00+05:30</published><updated>2018-09-05T00:00:00+05:30</updated><author><name>Ashish Jain</name></author><id>tag:ashxjain.github.io,2018-09-05:/set-live-env-using-gdb.html</id><summary type="html">&lt;p&gt;Use GDB to modify local environment variables of a running process&lt;/p&gt;</summary><content type="html">&lt;p&gt;Use GDB to attach to the process&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>ashxjain</title><link href="http://ashxjain.github.io/" rel="alternate"></link><link href="http://ashxjain.github.io/feeds/linux.atom.xml" rel="self"></link><id>http://ashxjain.github.io/</id><updated>2018-09-05T00:00:00+05:30</updated><entry><title>Modify environment variables of a running process</title><link href="http://ashxjain.github.io/set-live-env-using-gdb.html" rel="alternate"></link><published>2018-09-05T00:00:00+05:30</published><updated>2018-09-05T00:00:00+05:30</updated><author><name>Ashish Jain</name></author><id>tag:ashxjain.github.io,2018-09-05:set-live-env-using-gdb.html</id><summary type="html">&lt;p&gt;Use GDB to attach to the process&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# gdb -p &amp;lt;Process-PID&amp;gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Set environment variable&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;(gdb) p setenv(&amp;quot;Key&amp;quot;, &amp;quot;Value&amp;quot;)
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;(gdb) p setenv(&amp;quot;Key&amp;quot;, &amp;quot;Value&amp;quot;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Exit&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;(gdb) q
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="err"&gt;(gdb) q&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -85,4 +85,4 @@ Env Val &lt;span class="k"&gt;for&lt;/span&gt; TZ: New_Value
 Env Val &lt;span class="k"&gt;for&lt;/span&gt; TZ: New_Value
 Env Val &lt;span class="k"&gt;for&lt;/span&gt; TZ: New_Value
 Env Val &lt;span class="k"&gt;for&lt;/span&gt; TZ: New_Value
-&lt;/pre&gt;&lt;/div&gt;</content><category term="linux"></category><category term="system"></category></entry></feed>
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="linux"></category><category term="system"></category></entry></feed>

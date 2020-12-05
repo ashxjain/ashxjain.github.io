@@ -10,13 +10,13 @@
 
   <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="http://ashxjain.github.io/theme/stylesheet/style.min.css">
+    <link rel="stylesheet" type="text/css" href="https://ashxjain.github.io/theme/stylesheet/style.min.css">
 
-  <link rel="stylesheet" type="text/css" href="http://ashxjain.github.io/theme/pygments/github.min.css">
-  <link rel="stylesheet" type="text/css" href="http://ashxjain.github.io/theme/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="https://ashxjain.github.io/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="https://ashxjain.github.io/theme/font-awesome/css/font-awesome.min.css">
 
 
-    <link href="http://ashxjain.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="ashxjain Atom">
+    <link href="https://ashxjain.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="ashxjain Atom">
 
 
 
@@ -30,11 +30,11 @@
 <meta property="og:title" content="SuperConvergence"/>
 <meta property="og:description" content="SuperConvergence"/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="http://ashxjain.github.io/superconvergence.html"/>
+<meta property="og:url" content="https://ashxjain.github.io/superconvergence.html"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2020-12-06 00:00:00+05:30"/>
 <meta property="article:modified_time" content=""/>
-<meta property="article:author" content="http://ashxjain.github.io/author/ashish-jain.html">
+<meta property="article:author" content="https://ashxjain.github.io/author/ashish-jain.html">
 <meta property="article:section" content="ml"/>
 <meta property="article:tag" content="ml"/>
 <meta property="og:image" content="/images/sitelogo.png?s=120">
@@ -45,10 +45,10 @@
 <body>
   <aside>
     <div>
-      <a href="http://ashxjain.github.io">
+      <a href="https://ashxjain.github.io">
         <img src="/images/sitelogo.png?s=120" alt="Ashish Jain" title="Ashish Jain">
       </a>
-      <h1><a href="http://ashxjain.github.io">Ashish Jain</a></h1>
+      <h1><a href="https://ashxjain.github.io">Ashish Jain</a></h1>
 
 <p>Software Engineer</p>
 
@@ -69,7 +69,7 @@
       
     <h1 id="superconvergence">SuperConvergence</h1>
     <p>
-          Posted on Sun 06 December 2020 in <a href="http://ashxjain.github.io/category/ml.html">ml</a>
+          Posted on Sun 06 December 2020 in <a href="https://ashxjain.github.io/category/ml.html">ml</a>
 
 
     </p>
@@ -85,7 +85,7 @@
 </li>
 <li>
 <p>Our loss function is somewhat like the following:</p>
-<p><img alt="LR-WD-BS" src="images/LR-WD-BS.png"></p>
+<p><img alt="LR-WD-BS" src="images/LR-WD-BS.png" /></p>
 </li>
 <li>
 <p>LR is multiplied by the gradient weight update &amp; the weight decay averages over batch size. But say we move from Colab to AWS GPU (where we have higher GPUs), then our batch size will increase (say 8 times). Then we should make sure that LR is also increased respectively such that above equality is maintained.</p>
@@ -110,14 +110,14 @@
 <ul>
 <li>
 <p>[Abstract]: In this paper, we describe a phenomenon, which we called "super-convergence", here <strong>neural</strong> <strong>networks can be trained an order of magnitude faster</strong> than with standard training methods. The existence of super-convergence is relevant to understanding why deep networks generalize well. 
-  <img alt="LeslieSmithPaperSnippet" src="images/LeslieSmithPaperSnippet.png"></p>
+  <img alt="LeslieSmithPaperSnippet" src="images/LeslieSmithPaperSnippet.png" /></p>
 </li>
 <li>
 <p>As per paper, large learning rates gives regularization effects during training!</p>
 </li>
 </ul>
-<p><img alt="Regularization" src="images/Regularization.png">
-  <img alt="MutlipleRegularization" src="images/MutlipleRegularization.png"></p>
+<p><img alt="Regularization" src="images/Regularization.png" />
+  <img alt="MutlipleRegularization" src="images/MutlipleRegularization.png" /></p>
 <h4>Evolution of OCP (One-Cycle-Policy) from Simple LR</h4>
 <ul>
 <li>
@@ -129,18 +129,18 @@
 <li>Plot LR vs Loss graph</li>
 <li>The best LR is where we see <strong>steepest reduction in loss</strong>. </li>
 </ul>
-<p><img alt="Best-LR" src="images/Best-LR.png"></p>
+<p><img alt="Best-LR" src="images/Best-LR.png" /></p>
 <ul>
 <li>
 <p>Selecting a good starting learning rate is merely the first step. In order to efficiently train a robust model, we will need to gradually decrease the learning rate during training. If the learning rate remains unchanged during the course of training, it might be too large to converge and cause the loss function to fluctuate around the local minimum. The approach is to use a higher learning rate to quickly reach the regions of (local) minima during the initial training stage, and set a smaller learning rate as training progresses in order to explore <strong>“deeper and more thoroughly”</strong> in the region to find the minimum.</p>
 </li>
 <li>
 <p><strong>Piecewise Constant</strong>:
-  <img alt="PiecewiseConstant" src="images/PiecewiseConstant.png"></p>
+  <img alt="PiecewiseConstant" src="images/PiecewiseConstant.png" /></p>
 </li>
 <li>
 <p>Benefits: As we have discussed through our variable value example, say a variable needs to be at 0.3456789. </p>
-<p>But if our updates are governed by <img alt="LaTeX: -\gamma\times\binom{\partial L}{\partial w_i}" src="https://canvas.instructure.com/equation_images/-%255Cgamma%255Ctimes%255Cbinom%257B%255Cpartial%2520L%257D%257B%255Cpartial%2520w_i%257D">, and it can only go as low as some multiple of 0.001, </p>
+<p>But if our updates are governed by <img alt="LaTeX: -\gamma\times\binom{\partial L}{\partial w_i}" src="https://canvas.instructure.com/equation_images/-%255Cgamma%255Ctimes%255Cbinom%257B%255Cpartial%2520L%257D%257B%255Cpartial%2520w_i%257D" />, and it can only go as low as some multiple of 0.001, </p>
 <p>then we can only achieve <strong>0.345</strong>. For us to achieve the remaining 0.000<strong>6789</strong>, we need to reduce</p>
 <p>the magnitude order of updates by 1 decimal unit every time. In Piecewise constant we reduce the learning rate gradually, keep it constant for a few epochs. Normally, you'd see magnitude drop by 10 every 25-50 epoch.</p>
 </li>
@@ -164,7 +164,7 @@
 <ul>
 <li>Short-term negative effect: During initialization, some points might be closer to their optimal value, but if we increase the LR by a large value, then they might displace to a value far from the optimal value</li>
 <li>Longer-term beneficial effect: But displacing from an optimal value could be that we just moved it from one local minima to another better minima. i.e. we want the values to be in a minima, where slight changes (change in dataset), doesn't make network perform bad:
-  <img alt="BetterMinima" src="images/BetterMinima.png"></li>
+  <img alt="BetterMinima" src="images/BetterMinima.png" /></li>
 <li>Increasing the learning rate will force the model to jump to a different part of the weight space if the current area is “spikey”. It is better to avoid spikey area, because although we might good accuracy there, it won't be Robust! Ideal minima is the second image (with big mouth)</li>
 </ul>
 </li>
@@ -173,11 +173,11 @@
 <ul>
 <li>
 <p>Before looking at OCP, one must under LR range test to find min &amp; max LRs. Basically, plot LR against accuracy (i.e. train with increasing LR) and find a range from the plot where you think accuracy is pretty consistent:
-  <img alt="LRRangeTest" src="images/LRRangeTest.png"></p>
+  <img alt="LRRangeTest" src="images/LRRangeTest.png" /></p>
 </li>
 <li>
 <p>Now coming back to OCP: The author recommends doing one cycle of learning rate of 2 steps of <strong>equal length</strong> (actually not equal, as we reduce LR significantly in last few epochs). We choose the maximum learning rate using a range test. We use a lower learning rate as 1/5th or 1/10th of the maximum learning rate (Rohan usually uses 1/8, also not getting min from graph like above). We go from a lower learning rate to a higher learning rate in step 1 and back to a lower learning rate in step 2. We pick this cycle length slightly lesser than the total number of epochs to be trained. And in the last remaining iterations, we annihilate the learning rate way below the lower learning rate value(1/10 th or 1/100 th).
-  <img alt="OCP" src="images/OCP.png"></p>
+  <img alt="OCP" src="images/OCP.png" /></p>
 </li>
 <li>
 <p>The motivation behind this is that, during the middle of learning when the learning rate is higher, the learning rate works as a regularisation method and keep the network from overfitting. This helps the network to avoid steep areas of loss and land better flatter minima.</p>
@@ -190,11 +190,11 @@
 </li>
 <li>
 <p>This will come up as intuition. But we'll see that we can train our network very very fast! Maybe in just, say, 4 epochs. 2k to 10k is a good iteration to work with. We can just start with 2k. But what about the peak, should it be at 1k? -&gt; No, originally it was proposed to be in middle, but now it has changed:</p>
-<p><img alt="PeaksForOCP" src="images/PeaksForOCP.png"></p>
+<p><img alt="PeaksForOCP" src="images/PeaksForOCP.png" /></p>
 </li>
 <li>
 <p>Momentum and learning rate are closely related. It can be seen in the weight update equation for SGD that the momentum has a similar impact as the learning rate on weight updates. The author found in their experiments that reducing the momentum when the learning rate is increasing gives better results. This supports the intuition that in that part of the training, we want the SGD to quickly go in new directions to find a better minima, so the new gradients need to be given more weight. [Rohan doesn't set this momentum, as he didn't see much difference, we can just use a fixed momentum]
-  <img alt="OCPMomentum" src="images/OCPMomentum.png"></p>
+  <img alt="OCPMomentum" src="images/OCPMomentum.png" /></p>
 </li>
 <li>
 <p>Does OCP provide us higher accuracy in practice? </p>
@@ -214,7 +214,7 @@
 <li>Annihilation, can be done say in between 1.6K - 2K</li>
 <li>
 <p>Better to have it written in an excel sheet:
-    <img alt="OCPLRSearch" src="images/OCPLRSearch.png"></p>
+    <img alt="OCPLRSearch" src="images/OCPLRSearch.png" /></p>
 <ul>
 <li>For different LR max values, have LRmin (diff values /5,/8,/10) and for different iterations with different annihilation</li>
 </ul>
@@ -244,7 +244,7 @@
   </div>
   <div class="tag-cloud">
     <p>
-      <a href="http://ashxjain.github.io/tag/ml.html">ml</a>
+      <a href="https://ashxjain.github.io/tag/ml.html">ml</a>
     </p>
   </div>
 
@@ -268,7 +268,7 @@
   "@context" : "http://schema.org",
   "@type" : "Blog",
   "name": " ashxjain ",
-  "url" : "http://ashxjain.github.io",
+  "url" : "https://ashxjain.github.io",
   "image": "/images/sitelogo.png?s=120",
   "description": "Ashish Jain's Thoughts and Writings"
 }

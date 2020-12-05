@@ -10,13 +10,13 @@
 
   <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="http://ashxjain.github.io/theme/stylesheet/style.min.css">
+    <link rel="stylesheet" type="text/css" href="https://ashxjain.github.io/theme/stylesheet/style.min.css">
 
-  <link rel="stylesheet" type="text/css" href="http://ashxjain.github.io/theme/pygments/github.min.css">
-  <link rel="stylesheet" type="text/css" href="http://ashxjain.github.io/theme/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="https://ashxjain.github.io/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="https://ashxjain.github.io/theme/font-awesome/css/font-awesome.min.css">
 
 
-    <link href="http://ashxjain.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="ashxjain Atom">
+    <link href="https://ashxjain.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="ashxjain Atom">
 
 
 
@@ -30,11 +30,11 @@
 <meta property="og:title" content="RCNN Family"/>
 <meta property="og:description" content="Understanding RCNN models"/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="http://ashxjain.github.io/rcnn.html"/>
+<meta property="og:url" content="https://ashxjain.github.io/rcnn.html"/>
 <meta property="og:type" content="article"/>
 <meta property="article:published_time" content="2020-12-06 00:00:00+05:30"/>
 <meta property="article:modified_time" content=""/>
-<meta property="article:author" content="http://ashxjain.github.io/author/ashish-jain.html">
+<meta property="article:author" content="https://ashxjain.github.io/author/ashish-jain.html">
 <meta property="article:section" content="ml"/>
 <meta property="article:tag" content="ml"/>
 <meta property="article:tag" content="rcnn"/>
@@ -46,10 +46,10 @@
 <body>
   <aside>
     <div>
-      <a href="http://ashxjain.github.io">
+      <a href="https://ashxjain.github.io">
         <img src="/images/sitelogo.png?s=120" alt="Ashish Jain" title="Ashish Jain">
       </a>
-      <h1><a href="http://ashxjain.github.io">Ashish Jain</a></h1>
+      <h1><a href="https://ashxjain.github.io">Ashish Jain</a></h1>
 
 <p>Software Engineer</p>
 
@@ -70,7 +70,7 @@
       
     <h1 id="rcnn">RCNN Family</h1>
     <p>
-          Posted on Sun 06 December 2020 in <a href="http://ashxjain.github.io/category/ml.html">ml</a>
+          Posted on Sun 06 December 2020 in <a href="https://ashxjain.github.io/category/ml.html">ml</a>
 
 
     </p>
@@ -120,7 +120,7 @@
 <p>To increase resolution to 7x7 say from 4x3, then we just to interpolation i.e. 4x3 -&gt; interpolated to -&gt; 8x6, but we because we need 7x7, just repeat last column to get 8x7, then perform ROI pooling</p>
 </li>
 <li>Above shows one example of a region proposal made by SSOR. But actual bounding boxes are not always well alligned, like shown below. Proposed bbox might be the dotted lines. This scaled to the closest edge and then we get well aligned bbox. Obviously this introduces more errors and that will be solved later
-    <img alt="ROIMisAlign" src="images/ROIMisAlign.png"></li>
+    <img alt="ROIMisAlign" src="images/ROIMisAlign.png" /></li>
 <li>
 <p>Also, above division of boxes can be done the way we like i.e. first box is 2x3, it could've been 3x3, etc. Fix the method and then train the model</p>
 </li>
@@ -198,7 +198,7 @@
 || class predictions | no class predictions |</li>
 <li>With a size of WxH feature map, there are WH9 anchors in total. This means, we can have W != H.</li>
 <li>We then feed the region proposals to the RoI layer of the Fast R-CNN.
-  <img alt="RCNNRPN" src="images/RCNNRPN.png"></li>
+  <img alt="RCNNRPN" src="images/RCNNRPN.png" /></li>
 <li>Faster RCNN (or others) have three main types of networks:</li>
 <li>Head (say ResNet50 etc)</li>
 <li>Region Proposal Network</li>
@@ -241,7 +241,7 @@
 <p>Details about each layer &amp; loss:</p>
 <ul>
 <li>The region proposal layer runs feature maps produced by the head network through a convolutional layer (called rpn_net in code) followed by RELU. The output of rpn_net is run through two (1,1) kernel convolutional layers to produce background/foreground class scores and probabilities and corresponding bounding box regression coefficients. The stride length of the head network matches the stride used while generating the anchors, so the number of anchor boxes are in 1-1 correspondence with the information produced by the region proposal network</li>
-<li>(number of anchor boxes = number of class scores = number of bounding box regression coefficients = <img alt="\frac{w}{16}\times\frac{h}{16}\times9" src="http://www.telesens.co/wp-content/ql-cache/quicklatex.com-cafeb41929226bc13d570966070b1313_l3.svg">)</li>
+<li>(number of anchor boxes = number of class scores = number of bounding box regression coefficients = <img alt="\frac{w}{16}\times\frac{h}{16}\times9" src="http://www.telesens.co/wp-content/ql-cache/quicklatex.com-cafeb41929226bc13d570966070b1313_l3.svg" />)</li>
 <li>The proposal layer takes the anchor boxes produced by the anchor generation layer and prunes the number of boxes by applying non-maximum suppression based on the foreground scores (see appendix for details). It also generates transformed bounding boxes by applying the regression coefficients generated by the RPN to the corresponding anchor boxes.</li>
 <li>The goal of the anchor target layer is to select promising anchors that can be used to train the RPN network to:</li>
 <li>distinguish between foreground and background regions and</li>
@@ -284,7 +284,7 @@
 <p>It also applies interpolation to calculate the feature map values within the cell better. For example, by applying interpolation, the maximum feature value on the top left is changed from 0.8 to 0.88 now.</p>
 </li>
 </ul>
-<p><img alt="ROIAlign" src="images/ROIAlign.png"></p>
+<p><img alt="ROIAlign" src="images/ROIAlign.png" /></p>
 <ul>
 <li>
 <p>A detailed explanation on ROI pooling can be found <a href="https://towardsdatascience.com/understanding-region-of-interest-part-2-roi-align-and-roi-warp-f795196fc193">here</a></p>
@@ -298,8 +298,8 @@
   </div>
   <div class="tag-cloud">
     <p>
-      <a href="http://ashxjain.github.io/tag/ml.html">ml</a>
-      <a href="http://ashxjain.github.io/tag/rcnn.html">rcnn</a>
+      <a href="https://ashxjain.github.io/tag/ml.html">ml</a>
+      <a href="https://ashxjain.github.io/tag/rcnn.html">rcnn</a>
     </p>
   </div>
 
@@ -323,7 +323,7 @@
   "@context" : "http://schema.org",
   "@type" : "Blog",
   "name": " ashxjain ",
-  "url" : "http://ashxjain.github.io",
+  "url" : "https://ashxjain.github.io",
   "image": "/images/sitelogo.png?s=120",
   "description": "Ashish Jain's Thoughts and Writings"
 }

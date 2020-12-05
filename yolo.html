@@ -1,0 +1,407 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="" />
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="http://ashxjain.github.io/theme/stylesheet/style.min.css">
+
+  <link rel="stylesheet" type="text/css" href="http://ashxjain.github.io/theme/pygments/github.min.css">
+  <link rel="stylesheet" type="text/css" href="http://ashxjain.github.io/theme/font-awesome/css/font-awesome.min.css">
+
+
+    <link href="http://ashxjain.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="ashxjain Atom">
+
+
+
+
+
+<meta name="author" content="Ashish Jain" />
+<meta name="description" content="Understanding Yolo" />
+<meta name="keywords" content="ml, yolo">
+
+<meta property="og:site_name" content="ashxjain"/>
+<meta property="og:title" content="YOLO"/>
+<meta property="og:description" content="Understanding Yolo"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="http://ashxjain.github.io/yolo.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2020-12-06 00:00:00+05:30"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="http://ashxjain.github.io/author/ashish-jain.html">
+<meta property="article:section" content="ml"/>
+<meta property="article:tag" content="ml"/>
+<meta property="article:tag" content="yolo"/>
+<meta property="og:image" content="/images/sitelogo.png?s=120">
+
+  <title>ashxjain &ndash; YOLO</title>
+
+</head>
+<body>
+  <aside>
+    <div>
+      <a href="http://ashxjain.github.io">
+        <img src="/images/sitelogo.png?s=120" alt="Ashish Jain" title="Ashish Jain">
+      </a>
+      <h1><a href="http://ashxjain.github.io">Ashish Jain</a></h1>
+
+<p>Software Engineer</p>
+
+      <ul class="social">
+        <li><a class="sc-linkedin" href="https://linkedin.com/in/ashxjain" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        <li><a class="sc-github" href="https://github.com/ashxjain" target="_blank"><i class="fa fa-github"></i></a></li>
+        <li><a class="sc-twitter" href="https://twitter.com/ashxjain" target="_blank"><i class="fa fa-twitter"></i></a></li>
+      </ul>
+    </div>
+
+
+  </aside>
+  <main>
+
+
+<article class="single">
+  <header>
+      
+    <h1 id="yolo">YOLO</h1>
+    <p>
+          Posted on Sun 06 December 2020 in <a href="http://ashxjain.github.io/category/ml.html">ml</a>
+
+
+    </p>
+  </header>
+
+
+  <div>
+    <p>Understanding Yolo model and its variants</p>
+<h4>Yolo V2</h4>
+<ul>
+<li>
+<p>Paper: https://arxiv.org/abs/1612.08242v1</p>
+</li>
+<li>
+<p>Classification (Recognition): To identify cat vs dog; classify the object</p>
+</li>
+<li>
+<p>Detection: Bounding box along with classification; where the object is</p>
+</li>
+<li>
+<p>Compared to V1: BatchNorm, Skip connection, Fully convolutional, High res classifier/detector etc</p>
+</li>
+<li>
+<p>Uses anchor boxes: Anchor box are set of fixed size boxes which are scaled to fit object in it. After scaling the anchor box for the object, the final box is called bounding box</p>
+</li>
+<li>
+<p>Strategy used to train faster:</p>
+</li>
+<li>Start with low res, for example if you are high res images are of 448x448 dims, then you start training with 56x56 i.e. scale down the image and then train. This will be 64 times faster!! (448/56 * 448/56)</li>
+<li>With initial low res training, we train initial layers for E/G/T/P</li>
+<li>Because the network is fully convolutionally, we can input images of different dimensions</li>
+<li>We already saw that we divide the image dims by its own dim, essentially making all the values between 0-1. This way Yolo will work on <strong>proportions</strong> rather than actual sizes. This way find clusters of anchor boxes of same proportions using k-means clustering.</li>
+<li>
+<p>Output is 13x13x5x25:</p>
+<ul>
+<li>Image is divided into 13x13 blocks. Each block's top-left corner coordinate is (0,0) &amp; bottom-right coordinate is (1,1)</li>
+<li>5 = 5 anchor boxes</li>
+<li>25 = 5 + 20:</li>
+<li>5 = 4 + 1 = x,y,h,w + o<ul>
+<li>x,y = centroid of bounding box (will be between 0-1), sigmoid is used here</li>
+<li>h,w = scaling factor of bounding box. Say anchor box dim is h1,w2, and ground truth can be close to achor box dim or very big. Hence h,w is used to get ground truth dim by using exponential func: <code>h1.e^h</code>, <code>w1.e^w</code></li>
+<li>o = objectness (is object present or not) ranges between 0-1. We choose only those which has o above a certain threshold</li>
+</ul>
+</li>
+<li>20 = 20 classes</li>
+</ul>
+<p><img alt="YoloV2-4D" src="images/YoloV2-4D.jpg">
+  * Anchor dimensions are picked using k-means clustering on the dimensions of original bounding boxes. Final anchor boxes are: (0.57273, 0.677385), (1.87446, 2.06253), (3.33843, 5.47434), (7.88282, 3.52778), (9.77052, 9.16828). What are these values?
+<em> This is of the ratio 13:13 i.e. divide the image into 13x13 block and above is the dimension on that 13x13 coordinate system
+</em> Above is for 224x244 resolution. If the dimension is different, then network might not end with 13x13. For example, in YOT, final output is 26x26. Hence these values will change.
+  * If the cell is offset from the top left corner of the image by cx, cy and the bounding box ground-truth/prior has width and height gw, gh then the predictions correspond to:
+- bx = σ(tx) + cx, where σ is sigmoid
+- by = σ(ty) + cy
+- bw = gw.e^tw
+- bh = gh.e^th
+  * 13x13 will work for large resolution. But what about small resolution? For this they add a skip connection (passthrough) from 26x26 resolution layer to semi last layer:
+<img alt="yolov2_arch" src="https://www.researchgate.net/publication/336177198/figure/fig4/AS:809235726229506@1569948240717/The-architecture-of-YOLOv2.ppm"></p>
+<ul>
+<li>
+<p>Above, we can see that in pass through, in dim is 26x26x256 and out is 13x13x2048? How did that happen?</p>
+</li>
+<li>
+<p>26x26x256 ---reshape---&gt; 13x13x1024 ----conv---&gt; 1x1x1024x2048 -&gt; 13x13x2048</p>
+</li>
+<li>
+<p>And below passthrough, calculation is given, where output is 13x13x1024</p>
+</li>
+<li>
+<p>Both are stacked and we get 13x13x3072</p>
+</li>
+<li>
+<p>The pass-through layer concatenates the higher resolution features with the low-resolution features by stacking adjacent features into different channels</p>
+</li>
+<li>
+<p>Every 10 batches, the network chooses a random new image dimension size (multiples of 32) from 320x320 to 608x608. The anchor box dimensions will also need to scale up/down respectively.</p>
+</li>
+<li>
+<p>The final model, called Darknet-19 has 19 convolution layers and 5 max-pooling layers. 1x1 convolutions are used to compress the feature representations between 3x3.</p>
+</li>
+<li>
+<p>The network is first trained on classification for 160 epochs.</p>
+</li>
+<li>
+<p>After classification training, the last convolution layer is removed, and three 3x3 convolution layers with 1024 filters each followed by the final 1x1 convolution layer are added. The network is again trained for 160 epochs.</p>
+</li>
+<li>
+<p>During training both, detection and classification datasets are mixed. When the network sees an image with detection label, full back-propagation is performed, else only the classification part is back-propagated.</p>
+</li>
+<li>
+<p>DarkNet-19:
+  <img src="https://paperswithcode.com/media/methods/Screen_Shot_2020-06-24_at_12.38.12_PM.png" alt="drawing" width="400"/></p>
+</li>
+<li>
+<p>This table is designed to start at 224. If it starts at 416, it would end at 13x13.</p>
+</li>
+<li>
+<p>Loss Function:</p>
+</li>
+</ul>
+<p><img alt="YoloV2Loss" src="images/YoloV2Loss.png"></p>
+<ul>
+<li>
+<p>We need to compute losses for each Anchor Box (5 in total): ∑B represents this part.</p>
+</li>
+<li>
+<p>We need to do this for each of the 13x13 cells where S = 13: ∑S2 represents this part.</p>
+</li>
+<li>
+<p>pij =&gt; Classes</p>
+</li>
+<li>
+<p>Cij is also objectness, but that is used here to train the network to predict Cij</p>
+</li>
+<li>
+<p>1ijobj is 1 when there is an object in the cell ii, else 0.</p>
+</li>
+<li>
+<p>1ijnoobj is 1 when there is no object in the cell ii, else 0. We need to do this to make sure we reduce confidence when there is no object as well.</p>
+</li>
+<li>
+<p>1iobj is 1 when there is a particular class is predicted, else 0.</p>
+</li>
+<li>
+<p>λs are constants. λ is highest for coordinates in order to focus more on detection (remember, we have already trained the network for recognition!)</p>
+</li>
+<li>
+<p>We can also notice that wi, hi  are under square-root. This is done to penalise the smaller bounding boxes as we need to adjust them more.</p>
+</li>
+<li>
+<p>Check out this table:</p>
+<table>
+<thead>
+<tr>
+<th>var1</th>
+<th>var2</th>
+<th>(var1-var2)^2</th>
+<th>(sqrtvar1-sqrtvar2)^2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.0300</td>
+<td>0.020</td>
+<td>9.99e-05</td>
+<td>0.001</td>
+</tr>
+<tr>
+<td>0.0330</td>
+<td>0.022</td>
+<td>0.00012</td>
+<td>0.0011</td>
+</tr>
+<tr>
+<td>0.0693</td>
+<td>0.046</td>
+<td>0.000533</td>
+<td>0.00233</td>
+</tr>
+<tr>
+<td>0.2148</td>
+<td>0.143</td>
+<td>0.00512</td>
+<td>0.00723</td>
+</tr>
+<tr>
+<td>0.8808</td>
+<td>0.587</td>
+<td>0.0862</td>
+<td>0.0296</td>
+</tr>
+<tr>
+<td>4.4920</td>
+<td>2.994</td>
+<td>2.2421</td>
+<td>0.1512</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>For first 160 epochs, Lambda(coord) is set to 0, and then once it is trained for classification, we train it for detection</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4>YOLO V3</h4>
+<ul>
+<li>
+<p>In YOLO-V2, they added passthrough and did stacking to support smaller resolution. Here, stacking is taken to next level
+  <img alt="YoloV2V3SSD" src="images/YoloV2V3SSD.png"></p>
+</li>
+<li>
+<p>Feature extractor here is ResNET</p>
+</li>
+<li>
+<p>V3 uses only Convolutional layers, not even the pooling layer! How can we avoid any pooling layer?</p>
+</li>
+<li>
+<p>A 3x3 with a stride of 2.</p>
+</li>
+<li>
+<p>If we start at 416 and end at 13, we have taken a total stride of 32 (416/13).</p>
+</li>
+<li>
+<p>COCO Dataset has 80 classes. So final output shall be: 13x13x<strong>3</strong>x(4+1+<strong>80</strong>) = 13x13x<strong>255</strong></p>
+</li>
+<li>
+<p>YoloV3 has <strong>3</strong> Anchor Boxes! or <strong>9?</strong></p>
+<ul>
+<li>3 Anchor boxes for the resolutions: 52x52, 26x26, 13x13 -&gt; So in total 9 Anchor boxes i.e. 3 anchor boxes in different scales!</li>
+</ul>
+<p><img alt="YoloV3Arch" src="images/YoloV3Arch.png"></p>
+<ul>
+<li>
+<p>As seen above, no pooling layers, dim reduction is done using convolution layer with stride=2</p>
+</li>
+<li>
+<p>Starting from Scale-3: Post convolution, output size is 13x13x255</p>
+</li>
+<li>
+<p>At Scale-2, here's the flow:</p>
+</li>
+<li>
+<p>13x13x1024 ----[conv 1x1x256]---&gt;13x13x256----[upsample]----&gt;26x26x256------&gt;[concat with 26x26x512]----&gt;26x26x768---[multi-convs]---&gt;26x26x512---[conv 1x1x255]-----&gt;26x26x255</p>
+</li>
+<li>
+<p>At Scale-3, here's the flow:</p>
+</li>
+<li>
+<p>52x52x256----[concat 52x52x128]---&gt;52x52x384---[multi-convs]----&gt;52x52x256---[conv 1x1x255]---&gt;52x52x255</p>
+</li>
+<li>
+<p>Upsampling is done as shown below:
+  <img alt="upsample" src="images/upsample.png"></p>
+</li>
+</ul>
+<p><img alt="upsample-code" src="images/upsample-code.png"></p>
+<ul>
+<li>Class Confidence:</li>
+<li>YoloV3 has an interesting take on Class probabilities. Normally you'd take a SoftMax of the output vector. This is based on the assumption that classes are mutually exclusive. <em>If it is a </em>*Dog<strong><em>, it cannot be a </em>*Cat</strong>!</li>
+<li>YOLOv3 asks a question, what if we have classes which are not mutually exclusive. If it is a <strong><em>Person</em></strong>, it may be a <strong><em>Man</em></strong> as well! So instead of SoftMax, v3 uses a sigmoid function.</li>
+<li>v3 makes predictions at 52x52, 26x26 and 13x13; alternatively, at <strong>strides of 8 (416/52), 16 (416/26) and 32 (416/13).</strong>
+    <img alt="YoloV3PredictionScales" src="images/YoloV3PredictionScales.png"></li>
+<li>v3 in total now predicts (52x52 + 26x26 + 13x13)*3 = <strong>10647</strong> bounding boxes </li>
+<li>Output processing:<ul>
+<li><strong>Object Confidence Threshold</strong>: We filter the boxes based on their objectness score. Say we only consider those boxes which have a value greater than some threshold</li>
+<li>Get all the proposed anchor boxes for a class</li>
+<li>Calculate (NMS) <strong>Non-maximum Suppression</strong>: A technique that helps selects the best bunding box among overlapping proposals
+  <img alt="NMS" src="images/NMS.png"></li>
+<li>Say there are 4 anchors boxes for a class: C1, C2, C3, C4</li>
+<li>Calculate the IOU amongst those boxes i.e C1's against C2,C3,C4. Similarly, C2's against C1,C3,C4 etc. Only consider boxes which has overlap (IOU) value above some threshold (say 40%) i.e. if anchor box is less than threshold, then the box will be of 2 different objects of same class (for example, two cars in same image)</li>
+<li>Group the achor boxes with IOU more than a threshold and only keep the anchor box with maximum confidence (i.e. found max features) and suppress (ignore) others</li>
+<li>NMS fails if there is too much overlap between two objects of same class. For example:
+  <img alt="NMSOverlap" src="images/NMSOverlap.png"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4>YOLO V5</h4>
+<ul>
+<li>
+<p>YOLOv4 has improved again in terms of accuracy (average precision) and speed (FPS), the two metrics we generally use to qualify an object detection algorithm.</p>
+</li>
+<li>
+<p>There are <strong>4 apparent blocks, after the input image:</strong></p>
+</li>
+<li>
+<p>Backbone</p>
+</li>
+<li>Neck</li>
+<li>Dense Prediction—used in one-stage-detection algorithms such as YOLO, SSD, etc</li>
+<li>
+<p>Sparse Prediction—used in two-stage-detection algorithms such as Faster-R-CNN, etc.</p>
+</li>
+<li>
+<p>Backbone: <strong>Cross-Stage-Partial connections.</strong> The idea here is to separate the current layer into 2 parts, one that will go through a block of convolutions, and one that won’t. Then, we aggregate the results. Here’s an example with DenseNet:
+  <img alt="YoloV4Backbone" src="images/YoloV4Backbone.png"></p>
+</li>
+<li>
+<p>Neck: The purpose of the neck block is to <strong>add extra layers between the backbone and the head (dense prediction block)</strong>. You might see that different feature maps from the different layers used.</p>
+</li>
+</ul>
+<p><img alt="YoloV4Neck" src="images/YoloV4Neck.png"></p>
+<ul>
+<li>
+<p>YoloV4 used a modified version of the <a href="https://arxiv.org/pdf/1803.01534.pdf">PANet (Path Aggregation Network)</a>. The idea is again to aggregate information to get higher accuracy. Rather than addition, it does concatenation</p>
+</li>
+<li>
+<p>Another technique used is <a href="https://arxiv.org/pdf/1807.06521.pdf">Spatial Attention Module (SAM) (Links to an external site.)</a>. Attention mechanisms have been widely used in deep learning, and especially in recurrent neural networks. It is like SENet (Squeeze-Excitation Network)</p>
+</li>
+</ul>
+<p><img alt="YoloV4SAM" src="images/YoloV4SAM.png"></p>
+<p><img alt="SENet" src="images/SENet.png"></p>
+<ul>
+<li>Finally, <a href="https://arxiv.org/pdf/1406.4729.pdf">Spatial Pyramid Pooling (SPP)</a>, used in R-CNN networks and numerous other algorithms, is also used here.</li>
+</ul>
+<p><img alt="YoloV4SpatialPool" src="images/YoloV4SpatialPool.png"></p>
+  </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="http://ashxjain.github.io/tag/ml.html">ml</a>
+      <a href="http://ashxjain.github.io/tag/yolo.html">yolo</a>
+    </p>
+  </div>
+
+
+
+
+
+</article>
+
+    <footer>
+<p>&copy;  2018</p>
+<p>    Powered by <a href="http://getpelican.com" target="_blank">Pelican</a> - <a href="https://github.com/alexandrevicenzi/flex" target="_blank">Flex</a> theme by <a href="http://alexandrevicenzi.com" target="_blank">Alexandre Vicenzi</a>
+</p>    </footer>
+  </main>
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "Blog",
+  "name": " ashxjain ",
+  "url" : "http://ashxjain.github.io",
+  "image": "/images/sitelogo.png?s=120",
+  "description": "Ashish Jain's Thoughts and Writings"
+}
+</script>
+
+</body>
+</html>

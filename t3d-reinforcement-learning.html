@@ -82,7 +82,7 @@
 <p>T3D is a reinforcement learning model, based on <a href="https://arxiv.org/pdf/1602.01783.pdf">Asynchronous Advantage Actor-Critic Algorithm</a> (A3C). But before we understand and implement T3D, let's get a quick understanding of what is reinforcement learning, what is A3C model and why to use A3C based models.</p>
 <p>In reinforcement learning, an agent/program is continuously learning from its environment. It learns on what to do, how to map situations to actions with the aim to maximize rewards it acheive by performing right actions for particular situations.</p>
 <p>As we all know about the Q equation derived from famous Bellman Equation, which is the basis for reinforcement learning:</p>
-<p><img alt="BellmanEqn" src="images/BellmanEqn.svg" /></p>
+<p><img alt="BellmanEqn" src="images/BellmanEqn.svg"></p>
 <p>So in above equation:</p>
 <ul>
 <li>Q (s, a) = Q-value of being in state (s) and reaching state (s') by taking an action (a)</li>
@@ -93,13 +93,13 @@
 <p>Q-value can be considered as a value associated with a specific action. Max of multiple Q-values for multiple actions is what is considered as action for the agent.</p>
 <p>For solving complex problems, we use a Deep Q Network (DQN), to predict Q-values as opposed to using a value table based model.</p>
 <p>A DQN takes in state as input and outputs Q values for all possible actions.</p>
-<p><img alt="DQN" src="images/DQN.png" /></p>
+<p><img alt="DQN" src="images/DQN.png"></p>
 <p>Since there are discrete number of actions, it will not work for continuous action spaces. For example, it works fine if say a car's action is to move 5 degrees left or right or no movement at all. But if it has be a range like -5 to +5 degrees, then this will not work. Hence comes in A3C models.</p>
-<p><img alt="A3C" src="images/A3C.png" /></p>
+<p><img alt="A3C" src="images/A3C.png"></p>
 <p>A3C models is an extension to DQN model, where we have two models: Actor &amp; Critic.</p>
 <p>Actor is trying to predict an action based on the current state (policy network), and critic is trying to predict the V-Values (max Q-Values) given the state and actions. Critic model ensures that the actor model takes right action as part of training process. To make it work for continuous action spaces, the value of actor model (max output) is actually used for training. This value defines the action value. More details on why actor-critic model and its training aspects is covered as part of T3D explanation.</p>
 <p>In T3D, twin stands for "2 Critic models", hence here we have 1 Actor, 2 Critic models.</p>
-<p><img alt="T3D-HighLevel" src="images/T3D-HighLevel.png" /></p>
+<p><img alt="T3D-HighLevel" src="images/T3D-HighLevel.png"></p>
 <p>Two critic models gives stability to our network. More explanation on this and how it is trained is covered step-by-step with actual implementation.</p>
 <h2>Step 1: Initialization</h2>
 <p>Import all the required libraries. A note on few important libraries:</p>
@@ -150,7 +150,7 @@
 <p>If memory is full, then first entry is removed and new entry is added.</p>
 </li>
 </ul>
-<p><img alt="ReplayMemory" src="images/ReplayMemory.png" /></p>
+<p><img alt="ReplayMemory" src="images/ReplayMemory.png"></p>
 <ul>
 <li>Replay memory size is usually initialised to a large number, in our case 1 Million, so that agent can learn from variety of experiences</li>
 </ul>
@@ -260,7 +260,7 @@
 <h2>Step 4: Training Initializations</h2>
 <ul>
 <li>Our whole training process is built in a class. In this class, as part of <code>__init__</code>, we initialize the following networks:
-  <img alt="T3D" src="images/T3D.png" /></li>
+  <img alt="T3D" src="images/T3D.png"></li>
 <li>As part of initialization, Actor Target model weights are same as Actor model. Similary Critic Target models weight are same as correspoding Critic models.</li>
 </ul>
 <div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">T3D</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -333,12 +333,12 @@
 <p>But to train actor network, we first need to get output from Critic network and hence we must first train Critic network. And Critic network is trained by Critic Target network, which in turn needs output from Actor Target network. So let's break this down and first see how to train Critic Network</p>
 </li>
 </ul>
-<p><img alt="T3D-Train-Order" src="images/T3D-Train-Order.png" /></p>
+<p><img alt="T3D-Train-Order" src="images/T3D-Train-Order.png"></p>
 <h2>Step 7: Training Critic Network</h2>
 <p>Critic network takes in (s, a) from the batch. And outputs Q-value.</p>
 <p>For loss calculation we first need to find target Q-value. And that is calculated using Bellman's equation:</p>
-<p><img alt="BellmanEqn" src="images/BellmanEqn.svg" /></p>
-<p><img alt="T3D-CriticNetworkWeightsBackProp" src="images/T3D-CriticNetworkWeightsBackProp.png" /></p>
+<p><img alt="BellmanEqn" src="images/BellmanEqn.svg"></p>
+<p><img alt="T3D-CriticNetworkWeightsBackProp" src="images/T3D-CriticNetworkWeightsBackProp.png"></p>
 <h5>Step 7.1: Calculating target Q-Value</h5>
 <p>So, we need the following to calculate target Q-value:</p>
 <ul>
@@ -425,7 +425,7 @@
 <ul>
 <li>Now that we have Critic network updated with new weights. Once in every policy_freq (=2) iteration, we update Actor network weights.</li>
 </ul>
-<p><img alt="T3D-ActorNetworkGradAsc" src="images/T3D-ActorNetworkGradAsc.png" /></p>
+<p><img alt="T3D-ActorNetworkGradAsc" src="images/T3D-ActorNetworkGradAsc.png"></p>
 <ul>
 <li>Actor network uses Critic network 1 (Q1)'s output for loss calculation. This loss is maximized using Gradient Ascent. We maximize loss here because we want to maximize Q-value and max Q-value is the action taken by the agent.</li>
 </ul>
@@ -444,11 +444,11 @@
 <ul>
 <li>Once the actor network weights are updated, after next two iterations, target networks' weights are updated from their corresponding model networks using Polyak Averaging.</li>
 </ul>
-<p><img alt="T3D-PolyakAvg" src="images/T3D-PolyakAvg.png" /></p>
+<p><img alt="T3D-PolyakAvg" src="images/T3D-PolyakAvg.png"></p>
 <ul>
 <li><strong>Polyak Averaging:</strong> The essence of this equation is to take little of new weights and keep most of old weights. Tau is a very small number.</li>
 </ul>
-<p><img alt="PolyakAvgEqn" src="images/PolyakAvgEqn.svg" /></p>
+<p><img alt="PolyakAvgEqn" src="images/PolyakAvgEqn.svg"></p>
 <ul>
 <li>
 <p>Above equation can be rewritten as:

@@ -1,0 +1,625 @@
+<!doctype html>
+<html>
+<head>
+<meta charset='UTF-8'><meta name='viewport' content='width=device-width initial-scale=1'>
+
+<link href='https://fonts.loli.net/css?family=Open+Sans:400italic,700italic,700,400&subset=latin,latin-ext' rel='stylesheet' type='text/css' /><style type='text/css'>html {overflow-x: initial !important;}:root { --bg-color: #ffffff; --text-color: #333333; --select-text-bg-color: #B5D6FC; --select-text-font-color: auto; --monospace: "Lucida Console",Consolas,"Courier",monospace; --title-bar-height: 20px; }
+.mac-os-11 { --title-bar-height: 28px; }
+html { font-size: 14px; background-color: var(--bg-color); color: var(--text-color); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+body { margin: 0px; padding: 0px; height: auto; bottom: 0px; top: 0px; left: 0px; right: 0px; font-size: 1rem; line-height: 1.42857143; overflow-x: hidden; background-image: inherit; background-size: inherit; background-attachment: inherit; background-origin: inherit; background-clip: inherit; background-color: inherit; tab-size: 4; background-position: inherit inherit; background-repeat: inherit inherit; }
+iframe { margin: auto; }
+a.url { word-break: break-all; }
+a:active, a:hover { outline: 0px; }
+.in-text-selection, ::selection { text-shadow: none; background: var(--select-text-bg-color); color: var(--select-text-font-color); }
+#write { margin: 0px auto; height: auto; width: inherit; word-break: normal; word-wrap: break-word; position: relative; white-space: normal; overflow-x: visible; padding-top: 36px; }
+#write.first-line-indent p { text-indent: 2em; }
+#write.first-line-indent li p, #write.first-line-indent p * { text-indent: 0px; }
+#write.first-line-indent li { margin-left: 2em; }
+.for-image #write { padding-left: 8px; padding-right: 8px; }
+body.typora-export { padding-left: 30px; padding-right: 30px; }
+.typora-export .footnote-line, .typora-export li, .typora-export p { white-space: pre-wrap; }
+.typora-export .task-list-item input { pointer-events: none; }
+@media screen and (max-width: 500px) { 
+  body.typora-export { padding-left: 0px; padding-right: 0px; }
+  #write { padding-left: 20px; padding-right: 20px; }
+  .CodeMirror-sizer { margin-left: 0px !important; }
+  .CodeMirror-gutters { display: none !important; }
+}
+#write li > figure:last-child { margin-bottom: 0.5rem; }
+#write ol, #write ul { position: relative; }
+img { max-width: 100%; vertical-align: middle; image-orientation: from-image; }
+button, input, select, textarea { color: inherit; font-family: inherit; font-size: inherit; font-style: inherit; font-variant-caps: inherit; font-weight: inherit; font-stretch: inherit; line-height: inherit; }
+input[type="checkbox"], input[type="radio"] { line-height: normal; padding: 0px; }
+*, ::after, ::before { box-sizing: border-box; }
+#write h1, #write h2, #write h3, #write h4, #write h5, #write h6, #write p, #write pre { width: inherit; }
+#write h1, #write h2, #write h3, #write h4, #write h5, #write h6, #write p { position: relative; }
+p { line-height: inherit; }
+h1, h2, h3, h4, h5, h6 { break-after: avoid-page; break-inside: avoid; orphans: 4; }
+p { orphans: 4; }
+h1 { font-size: 2rem; }
+h2 { font-size: 1.8rem; }
+h3 { font-size: 1.6rem; }
+h4 { font-size: 1.4rem; }
+h5 { font-size: 1.2rem; }
+h6 { font-size: 1rem; }
+.md-math-block, .md-rawblock, h1, h2, h3, h4, h5, h6, p { margin-top: 1rem; margin-bottom: 1rem; }
+.hidden { display: none; }
+.md-blockmeta { color: rgb(204, 204, 204); font-weight: 700; font-style: italic; }
+a { cursor: pointer; }
+sup.md-footnote { padding: 2px 4px; background-color: rgba(238, 238, 238, 0.7); color: rgb(85, 85, 85); border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; cursor: pointer; }
+sup.md-footnote a, sup.md-footnote a:hover { color: inherit; text-transform: inherit; text-decoration: inherit; }
+#write input[type="checkbox"] { cursor: pointer; width: inherit; height: inherit; }
+figure { overflow-x: auto; margin: 1.2em 0px; max-width: calc(100% + 16px); padding: 0px; }
+figure > table { margin: 0px; }
+tr { break-inside: avoid; break-after: auto; }
+thead { display: table-header-group; }
+table { border-collapse: collapse; border-spacing: 0px; width: 100%; overflow: auto; break-inside: auto; text-align: left; }
+table.md-table td { min-width: 32px; }
+.CodeMirror-gutters { border-right-width: 0px; background-color: inherit; }
+.CodeMirror-linenumber { }
+.CodeMirror { text-align: left; }
+.CodeMirror-placeholder { opacity: 0.3; }
+.CodeMirror pre { padding: 0px 4px; }
+.CodeMirror-lines { padding: 0px; }
+div.hr:focus { cursor: none; }
+#write pre { white-space: pre-wrap; }
+#write.fences-no-line-wrapping pre { white-space: pre; }
+#write pre.ty-contain-cm { white-space: normal; }
+.CodeMirror-gutters { margin-right: 4px; }
+.md-fences { font-size: 0.9rem; display: block; break-inside: avoid; text-align: left; overflow: visible; white-space: pre; background-image: inherit; background-size: inherit; background-attachment: inherit; background-origin: inherit; background-clip: inherit; background-color: inherit; position: relative !important; background-position: inherit inherit; background-repeat: inherit inherit; }
+.md-fences-adv-panel { width: 100%; margin-top: 10px; text-align: center; padding-top: 0px; padding-bottom: 8px; overflow-x: auto; }
+#write .md-fences.mock-cm { white-space: pre-wrap; }
+.md-fences.md-fences-with-lineno { padding-left: 0px; }
+#write.fences-no-line-wrapping .md-fences.mock-cm { white-space: pre; overflow-x: auto; }
+.md-fences.mock-cm.md-fences-with-lineno { padding-left: 8px; }
+.CodeMirror-line, twitterwidget { break-inside: avoid; }
+.footnotes { opacity: 0.8; font-size: 0.9rem; margin-top: 1em; margin-bottom: 1em; }
+.footnotes + .footnotes { margin-top: 0px; }
+.md-reset { margin: 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; text-decoration: none; text-shadow: none; float: none; position: static; width: auto; height: auto; white-space: nowrap; cursor: inherit; line-height: normal; font-weight: 400; text-align: left; box-sizing: content-box; direction: ltr; background-position: 0px 0px; background-repeat: initial initial; }
+li div { padding-top: 0px; }
+blockquote { margin: 1rem 0px; }
+li .mathjax-block, li p { margin: 0.5rem 0px; }
+li blockquote { margin: 1rem 0px; }
+li { margin: 0px; position: relative; }
+blockquote > :last-child { margin-bottom: 0px; }
+blockquote > :first-child, li > :first-child { margin-top: 0px; }
+.footnotes-area { color: rgb(136, 136, 136); margin-top: 0.714rem; padding-bottom: 0.143rem; white-space: normal; }
+#write .footnote-line { white-space: pre-wrap; }
+@media print { 
+  body, html { border: 1px solid transparent; height: 99%; break-after: avoid; break-before: avoid; font-variant-ligatures: no-common-ligatures; }
+  #write { margin-top: 0px; padding-top: 0px; border-color: transparent !important; }
+  .typora-export * { -webkit-print-color-adjust: exact; }
+  .typora-export #write { break-after: avoid; }
+  .typora-export #write::after { height: 0px; }
+  .is-mac table { break-inside: avoid; }
+  .typora-export-show-outline .typora-export-sidebar { display: none; }
+}
+.footnote-line { margin-top: 0.714em; font-size: 0.7em; }
+a img, img a { cursor: pointer; }
+pre.md-meta-block { font-size: 0.8rem; min-height: 0.8rem; white-space: pre-wrap; background-color: rgb(204, 204, 204); display: block; overflow-x: hidden; background-position: initial initial; background-repeat: initial initial; }
+p > .md-image:only-child:not(.md-img-error) img, p > img:only-child { display: block; margin: auto; }
+#write.first-line-indent p > .md-image:only-child:not(.md-img-error) img { left: -2em; position: relative; }
+p > .md-image:only-child { display: inline-block; width: 100%; }
+#write .MathJax_Display { margin: 0.8em 0px 0px; }
+.md-math-block { width: 100%; }
+.md-math-block:not(:empty)::after { display: none; }
+.MathJax_ref { fill: currentcolor; }
+[contenteditable="true"]:active, [contenteditable="true"]:focus, [contenteditable="false"]:active, [contenteditable="false"]:focus { outline: 0px; box-shadow: none; }
+.md-task-list-item { position: relative; list-style-type: none; }
+.task-list-item.md-task-list-item { padding-left: 0px; }
+.md-task-list-item > input { position: absolute; top: 0px; left: 0px; margin-left: -1.2em; margin-top: calc(1em - 10px); border: none; }
+.math { font-size: 1rem; }
+.md-toc { min-height: 3.58rem; position: relative; font-size: 0.9rem; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; }
+.md-toc-content { position: relative; margin-left: 0px; }
+.md-toc-content::after, .md-toc::after { display: none; }
+.md-toc-item { display: block; color: rgb(65, 131, 196); }
+.md-toc-item a { text-decoration: none; }
+.md-toc-inner:hover { text-decoration: underline; }
+.md-toc-inner { display: inline-block; cursor: pointer; }
+.md-toc-h1 .md-toc-inner { margin-left: 0px; font-weight: 700; }
+.md-toc-h2 .md-toc-inner { margin-left: 2em; }
+.md-toc-h3 .md-toc-inner { margin-left: 4em; }
+.md-toc-h4 .md-toc-inner { margin-left: 6em; }
+.md-toc-h5 .md-toc-inner { margin-left: 8em; }
+.md-toc-h6 .md-toc-inner { margin-left: 10em; }
+@media screen and (max-width: 48em) { 
+  .md-toc-h3 .md-toc-inner { margin-left: 3.5em; }
+  .md-toc-h4 .md-toc-inner { margin-left: 5em; }
+  .md-toc-h5 .md-toc-inner { margin-left: 6.5em; }
+  .md-toc-h6 .md-toc-inner { margin-left: 8em; }
+}
+a.md-toc-inner { font-size: inherit; font-style: inherit; font-weight: inherit; line-height: inherit; }
+.footnote-line a:not(.reversefootnote) { color: inherit; }
+.md-attr { display: none; }
+.md-fn-count::after { content: "."; }
+code, pre, samp, tt { font-family: var(--monospace); }
+kbd { margin: 0px 0.1em; padding: 0.1em 0.6em; font-size: 0.8em; color: rgb(36, 39, 41); background-color: rgb(255, 255, 255); border: 1px solid rgb(173, 179, 185); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; box-shadow: rgba(12, 13, 14, 0.2) 0px 1px 0px, rgb(255, 255, 255) 0px 0px 0px 2px inset; white-space: nowrap; vertical-align: middle; background-position: initial initial; background-repeat: initial initial; }
+.md-comment { color: rgb(162, 127, 3); opacity: 0.8; font-family: var(--monospace); }
+code { text-align: left; }
+a.md-print-anchor { white-space: pre !important; border: none !important; display: inline-block !important; position: absolute !important; width: 1px !important; right: 0px !important; outline: 0px !important; text-shadow: initial !important; background-position: 0px 0px !important; background-repeat: initial initial !important; }
+.md-inline-math .MathJax_SVG .noError { display: none !important; }
+.html-for-mac .inline-math-svg .MathJax_SVG { vertical-align: 0.2px; }
+.md-fences-math .MathJax_SVG_Display, .md-math-block .MathJax_SVG_Display { text-align: center; margin: 0px; position: relative; text-indent: 0px; max-width: none; max-height: none; min-height: 0px; min-width: 100%; width: auto; overflow-y: visible; display: block !important; }
+.MathJax_SVG_Display, .md-inline-math .MathJax_SVG_Display { width: auto; margin: inherit; display: inline-block !important; }
+.MathJax_SVG .MJX-monospace { font-family: var(--monospace); }
+.MathJax_SVG .MJX-sans-serif { font-family: sans-serif; }
+.MathJax_SVG { display: inline; font-style: normal; font-weight: 400; line-height: normal; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; padding: 0px; margin: 0px; zoom: 90%; }
+#math-inline-preview-content { zoom: 1.1; }
+.MathJax_SVG * { transition: none; }
+.MathJax_SVG_Display svg { vertical-align: middle !important; margin-bottom: 0px !important; margin-top: 0px !important; }
+.os-windows.monocolor-emoji .md-emoji { font-family: "Segoe UI Symbol", sans-serif; }
+.md-diagram-panel > svg { max-width: 100%; }
+[lang="flow"] svg, [lang="mermaid"] svg { max-width: 100%; height: auto; }
+[lang="mermaid"] .node text { font-size: 1rem; }
+table tr th { border-bottom-width: 0px; }
+video { max-width: 100%; display: block; margin: 0px auto; }
+iframe { max-width: 100%; width: 100%; border: none; }
+.highlight td, .highlight tr { border: 0px; }
+mark { background-color: rgb(255, 255, 0); color: rgb(0, 0, 0); background-position: initial initial; background-repeat: initial initial; }
+.md-html-inline .md-plain, .md-html-inline strong, mark .md-inline-math, mark strong { color: inherit; }
+.md-expand mark .md-meta { opacity: 0.3 !important; }
+mark .md-meta { color: rgb(0, 0, 0); }
+@media print { 
+  .typora-export h1, .typora-export h2, .typora-export h3, .typora-export h4, .typora-export h5, .typora-export h6 { break-inside: avoid; }
+}
+.md-diagram-panel .messageText { stroke: none !important; }
+.md-diagram-panel .start-state { fill: var(--node-fill); }
+.md-diagram-panel .edgeLabel rect { opacity: 1 !important; }
+.md-require-zoom-fix foreignObject { font-size: var(--mermaid-font-zoom); }
+.md-fences.md-fences-math { font-size: 1em; }
+.md-fences-math .MathJax_SVG_Display { margin-top: 8px; cursor: default; }
+.md-fences-advanced:not(.md-focus) { padding: 0px; white-space: nowrap; border: 0px; }
+.md-fences-advanced:not(.md-focus) { background-image: inherit; background-size: inherit; background-attachment: inherit; background-origin: inherit; background-clip: inherit; background-color: inherit; background-position: inherit inherit; background-repeat: inherit inherit; }
+.typora-export-show-outline .typora-export-content { max-width: 1440px; margin: auto; display: flex; flex-direction: row; }
+.typora-export-sidebar { width: 300px; font-size: 0.8rem; margin-top: 80px; margin-right: 18px; }
+.typora-export-show-outline #write { --webkit-flex: 2; flex: 2 1 0%; }
+.typora-export-sidebar .outline-content { position: fixed; top: 0px; max-height: 100%; overflow: hidden auto; padding-bottom: 30px; padding-top: 60px; width: 300px; }
+@media screen and (max-width: 1024px) { 
+  .typora-export-sidebar, .typora-export-sidebar .outline-content { width: 240px; }
+}
+@media screen and (max-width: 800px) { 
+  .typora-export-sidebar { display: none; }
+}
+.outline-content li, .outline-content ul { margin-left: 0px; margin-right: 0px; padding-left: 0px; padding-right: 0px; list-style: none; }
+.outline-content ul { margin-top: 0px; margin-bottom: 0px; }
+.outline-content strong { font-weight: 400; }
+.outline-expander { width: 1rem; height: 1.428571429rem; position: relative; display: table-cell; vertical-align: middle; cursor: pointer; padding-left: 4px; }
+.outline-expander::before { content: ''; position: relative; font-family: Ionicons; display: inline-block; font-size: 8px; vertical-align: middle; }
+.outline-item { padding-top: 3px; padding-bottom: 3px; cursor: pointer; }
+.outline-expander:hover::before { content: ''; }
+.outline-h1 > .outline-item { padding-left: 0px; }
+.outline-h2 > .outline-item { padding-left: 1em; }
+.outline-h3 > .outline-item { padding-left: 2em; }
+.outline-h4 > .outline-item { padding-left: 3em; }
+.outline-h5 > .outline-item { padding-left: 4em; }
+.outline-h6 > .outline-item { padding-left: 5em; }
+.outline-label { cursor: pointer; display: table-cell; vertical-align: middle; text-decoration: none; color: inherit; }
+.outline-label:hover { text-decoration: underline; }
+.outline-item:hover { border-color: rgb(245, 245, 245); background-color: var(--item-hover-bg-color); }
+.outline-item:hover { margin-left: -28px; margin-right: -28px; border-left-width: 28px; border-left-style: solid; border-left-color: transparent; border-right-width: 28px; border-right-style: solid; border-right-color: transparent; }
+.outline-item-single .outline-expander::before, .outline-item-single .outline-expander:hover::before { display: none; }
+.outline-item-open > .outline-item > .outline-expander::before { content: ''; }
+.outline-children { display: none; }
+.info-panel-tab-wrapper { display: none; }
+.outline-item-open > .outline-children { display: block; }
+.typora-export .outline-item { padding-top: 1px; padding-bottom: 1px; }
+.typora-export .outline-item:hover { margin-right: -8px; border-right-width: 8px; border-right-style: solid; border-right-color: transparent; }
+.typora-export .outline-expander::before { content: "+"; font-family: inherit; top: -1px; }
+.typora-export .outline-expander:hover::before, .typora-export .outline-item-open > .outline-item > .outline-expander::before { content: '−'; }
+.typora-export-collapse-outline .outline-children { display: none; }
+.typora-export-collapse-outline .outline-item-open > .outline-children, .typora-export-no-collapse-outline .outline-children { display: block; }
+.typora-export-no-collapse-outline .outline-expander::before { content: "" !important; }
+.typora-export-show-outline .outline-item-active > .outline-item .outline-label { font-weight: 700; }
+
+
+:root {
+    --side-bar-bg-color: #fafafa;
+    --control-text-color: #777;
+}
+
+@include-when-export url(https://fonts.loli.net/css?family=Open+Sans:400italic,700italic,700,400&subset=latin,latin-ext);
+
+/* open-sans-regular - latin-ext_latin */
+  /* open-sans-italic - latin-ext_latin */
+    /* open-sans-700 - latin-ext_latin */
+    /* open-sans-700italic - latin-ext_latin */
+  html {
+    font-size: 16px;
+}
+
+body {
+    font-family: "Open Sans","Clear Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: rgb(51, 51, 51);
+    line-height: 1.6;
+}
+
+#write {
+    max-width: 860px;
+  	margin: 0 auto;
+  	padding: 30px;
+    padding-bottom: 100px;
+}
+
+@media only screen and (min-width: 1400px) {
+	#write {
+		max-width: 1024px;
+	}
+}
+
+@media only screen and (min-width: 1800px) {
+	#write {
+		max-width: 1200px;
+	}
+}
+
+#write > ul:first-child,
+#write > ol:first-child{
+    margin-top: 30px;
+}
+
+a {
+    color: #4183C4;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    position: relative;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+    line-height: 1.4;
+    cursor: text;
+}
+h1:hover a.anchor,
+h2:hover a.anchor,
+h3:hover a.anchor,
+h4:hover a.anchor,
+h5:hover a.anchor,
+h6:hover a.anchor {
+    text-decoration: none;
+}
+h1 tt,
+h1 code {
+    font-size: inherit;
+}
+h2 tt,
+h2 code {
+    font-size: inherit;
+}
+h3 tt,
+h3 code {
+    font-size: inherit;
+}
+h4 tt,
+h4 code {
+    font-size: inherit;
+}
+h5 tt,
+h5 code {
+    font-size: inherit;
+}
+h6 tt,
+h6 code {
+    font-size: inherit;
+}
+h1 {
+    font-size: 2.25em;
+    line-height: 1.2;
+    border-bottom: 1px solid #eee;
+}
+h2 {
+    font-size: 1.75em;
+    line-height: 1.225;
+    border-bottom: 1px solid #eee;
+}
+
+/*@media print {
+    .typora-export h1,
+    .typora-export h2 {
+        border-bottom: none;
+        padding-bottom: initial;
+    }
+
+    .typora-export h1::after,
+    .typora-export h2::after {
+        content: "";
+        display: block;
+        height: 100px;
+        margin-top: -96px;
+        border-top: 1px solid #eee;
+    }
+}*/
+
+h3 {
+    font-size: 1.5em;
+    line-height: 1.43;
+}
+h4 {
+    font-size: 1.25em;
+}
+h5 {
+    font-size: 1em;
+}
+h6 {
+   font-size: 1em;
+    color: #777;
+}
+p,
+blockquote,
+ul,
+ol,
+dl,
+table{
+    margin: 0.8em 0;
+}
+li>ol,
+li>ul {
+    margin: 0 0;
+}
+hr {
+    height: 2px;
+    padding: 0;
+    margin: 16px 0;
+    background-color: #e7e7e7;
+    border: 0 none;
+    overflow: hidden;
+    box-sizing: content-box;
+}
+
+li p.first {
+    display: inline-block;
+}
+ul,
+ol {
+    padding-left: 30px;
+}
+ul:first-child,
+ol:first-child {
+    margin-top: 0;
+}
+ul:last-child,
+ol:last-child {
+    margin-bottom: 0;
+}
+blockquote {
+    border-left: 4px solid #dfe2e5;
+    padding: 0 15px;
+    color: #777777;
+}
+blockquote blockquote {
+    padding-right: 0;
+}
+table {
+    padding: 0;
+    word-break: initial;
+}
+table tr {
+    border: 1px solid #dfe2e5;
+    margin: 0;
+    padding: 0;
+}
+table tr:nth-child(2n),
+thead {
+    background-color: #f8f8f8;
+}
+table th {
+    font-weight: bold;
+    border: 1px solid #dfe2e5;
+    border-bottom: 0;
+    margin: 0;
+    padding: 6px 13px;
+}
+table td {
+    border: 1px solid #dfe2e5;
+    margin: 0;
+    padding: 6px 13px;
+}
+table th:first-child,
+table td:first-child {
+    margin-top: 0;
+}
+table th:last-child,
+table td:last-child {
+    margin-bottom: 0;
+}
+
+.CodeMirror-lines {
+    padding-left: 4px;
+}
+
+.code-tooltip {
+    box-shadow: 0 1px 1px 0 rgba(0,28,36,.3);
+    border-top: 1px solid #eef2f2;
+}
+
+.md-fences,
+code,
+tt {
+    border: 1px solid #e7eaed;
+    background-color: #f8f8f8;
+    border-radius: 3px;
+    padding: 0;
+    padding: 2px 4px 0px 4px;
+    font-size: 0.9em;
+}
+
+code {
+    background-color: #f3f4f4;
+    padding: 0 2px 0 2px;
+}
+
+.md-fences {
+    margin-bottom: 15px;
+    margin-top: 15px;
+    padding-top: 8px;
+    padding-bottom: 6px;
+}
+
+
+.md-task-list-item > input {
+  margin-left: -1.3em;
+}
+
+@media print {
+    html {
+        font-size: 13px;
+    }
+    table,
+    pre {
+        page-break-inside: avoid;
+    }
+    pre {
+        word-wrap: break-word;
+    }
+}
+
+.md-fences {
+	background-color: #f8f8f8;
+}
+#write pre.md-meta-block {
+	padding: 1rem;
+    font-size: 85%;
+    line-height: 1.45;
+    background-color: #f7f7f7;
+    border: 0;
+    border-radius: 3px;
+    color: #777777;
+    margin-top: 0 !important;
+}
+
+.mathjax-block>.code-tooltip {
+	bottom: .375rem;
+}
+
+.md-mathjax-midline {
+    background: #fafafa;
+}
+
+#write>h3.md-focus:before{
+	left: -1.5625rem;
+	top: .375rem;
+}
+#write>h4.md-focus:before{
+	left: -1.5625rem;
+	top: .285714286rem;
+}
+#write>h5.md-focus:before{
+	left: -1.5625rem;
+	top: .285714286rem;
+}
+#write>h6.md-focus:before{
+	left: -1.5625rem;
+	top: .285714286rem;
+}
+.md-image>.md-meta {
+    /*border: 1px solid #ddd;*/
+    border-radius: 3px;
+    padding: 2px 0px 0px 4px;
+    font-size: 0.9em;
+    color: inherit;
+}
+
+.md-tag {
+    color: #a7a7a7;
+    opacity: 1;
+}
+
+.md-toc { 
+    margin-top:20px;
+    padding-bottom:20px;
+}
+
+.sidebar-tabs {
+    border-bottom: none;
+}
+
+#typora-quick-open {
+    border: 1px solid #ddd;
+    background-color: #f8f8f8;
+}
+
+#typora-quick-open-item {
+    background-color: #FAFAFA;
+    border-color: #FEFEFE #e5e5e5 #e5e5e5 #eee;
+    border-style: solid;
+    border-width: 1px;
+}
+
+/** focus mode */
+.on-focus-mode blockquote {
+    border-left-color: rgba(85, 85, 85, 0.12);
+}
+
+header, .context-menu, .megamenu-content, footer{
+    font-family: "Segoe UI", "Arial", sans-serif;
+}
+
+.file-node-content:hover .file-node-icon,
+.file-node-content:hover .file-node-open-state{
+    visibility: visible;
+}
+
+.mac-seamless-mode #typora-sidebar {
+    background-color: #fafafa;
+    background-color: var(--side-bar-bg-color);
+}
+
+.md-lang {
+    color: #b4654d;
+}
+
+/*.html-for-mac {
+    --item-hover-bg-color: #E6F0FE;
+}*/
+
+#md-notification .btn {
+    border: 0;
+}
+
+.dropdown-menu .divider {
+    border-color: #e5e5e5;
+    opacity: 0.4;
+}
+
+.ty-preferences .window-content {
+    background-color: #fafafa;
+}
+
+.ty-preferences .nav-group-item.active {
+    color: white;
+    background: #999;
+}
+
+.menu-item-container a.menu-style-btn {
+    background-color: #f5f8fa;
+    background-image: linear-gradient( 180deg , hsla(0, 0%, 100%, 0.8), hsla(0, 0%, 100%, 0)); 
+}
+
+
+ :root {--mermaid-font-zoom:1em ;}  @media print { @page {margin: 0 0 0 0;} body.typora-export {padding-left: 0; padding-right: 0;} #write {padding:0;}} .typora-export li, .typora-export p, .typora-export,  .footnote-line {white-space: normal;} 
+</style><title>notes</title>
+</head>
+<body class='typora-export'><div class='typora-export-content'>
+<div id='write'  class=''><h2 id='notes-on-distributed-systems'><span>Notes on Distributed Systems</span></h2><h4 id='course-details'><span>Course Details:</span></h4><p><span>CSE138, Lecture on Youtube: </span><a href='https://www.youtube.com/playlist?list=PLNPUF5QyWU8O0Wd8QDh9KaM1ggsxspJ31' target='_blank' class='url'>https://www.youtube.com/playlist?list=PLNPUF5QyWU8O0Wd8QDh9KaM1ggsxspJ31</a><span> by Professor Lindsey Kuper, UC Santa Cruz</span></p><h3 id='what--why'><span>What &amp; Why?</span></h3><h5 id='what-is-a-distributed-system'><span>What is a distributed system?</span></h5><ul><li><p><span>Martin Kelppmann&#39;s definition:</span></p><ul><li><span>running on several nodes connected by a network</span></li><li><span>characterized by partial failures</span></li></ul></li><li><p><span>Different philosophies on dealing with failures:</span></p><figure><table><thead><tr><th style='text-align:center;' ><span>Cloud Computing</span></th><th style='text-align:center;' ><span>High Performance Computing (HPC)</span></th></tr></thead><tbody><tr><td style='text-align:center;' ><span>Working around partial failures &amp; expecting those kinds of failures</span></td><td style='text-align:center;' ><span>Treat potential failures as total failures</span></td></tr><tr><td style='text-align:center;' >&nbsp;</td><td style='text-align:center;' ><span>Performs checkpointing (if a problem occurs, then you rollback to your last checkpoint)</span></td></tr></tbody></table></figure></li><li><p><span>Ways of failures:</span></p><ul><li><span>Machines itself failing</span></li><li><span>Connection between machines failing</span></li></ul></li><li><p><span>Sample situations of failure. Say there are two machines m1 &amp; m2 and m1 sends message to m2 and m2 performs some computation replies back to m1</span></p><ul><li><span>Request from m1 gets lost</span></li><li><span>Request from m1 is slow</span></li><li><span>m1 sends message and message reaches m2, but then m2 crashes</span></li></ul><p><span>In above situations, even though they are different from each other, from m1&#39;s point of view they are indistinguishable. Now consider the following situations:</span></p><ul><li><span>m1 sends message, but m2 is slow</span></li><li><span>m2 replies message, but it takes lot of time for the message to reach m1</span></li><li><span>m2 replies message, but it gets lost</span></li></ul><p><span>Again from m1&#39;s point of view, all these situtations are indistinguishable</span></p></li><li><p><span>Hence, If you send a request to another node and don&#39;t receive a response, it is </span><strong><span>impossible</span></strong><span> to know whey (without global knowledge of the system)</span></p></li><li><p><span>Some other situations that could occur (Byzantine faults):</span></p><ul><li><span>m2&#39;s lying, refusing to answer</span></li><li><span>cosmic rays</span></li></ul></li><li><p><span>How can m1 deal with all these uncertainities? One way is to set </span><strong><span>timeouts</span></strong><span>. Post timeout assume failure. But then consider this scenario:</span></p><ul><li><span>m1 sends request to m2 to increment x</span></li><li><span>m2 increments x, and replies &quot;OK&quot; to m1</span></li><li><span>But say m1 doesn&#39;t receive &quot;OK&quot;. Then it&#39;ll be wrong to assume that increment didn&#39;t occur and it&#39;ll be wrong to assume that increment did occur. This kind of </span><strong><span>uncertainity</span></strong><span> is the </span><strong><span>fundamental characteristic of a distributed system and is inevitable</span></strong></li></ul></li><li><p><span>A distributed system is characterised by partial failure and unbounded latency</span></p></li><li><p><span>Why would you want a distributed system?</span></p><ul><li><span>data too big to fit on one machine</span></li><li><span>to make things faster</span></li></ul></li></ul><h3 id='time-and-clocks'><span>Time and clocks</span></h3><ul><li><p><span>Clocks are used to</span></p><ol start='' ><li><span>mark </span><strong><span>points</span></strong><span> in time. Ex: &quot;This class starts at 9 AM PDT&quot;</span></li><li><span>measuring durations or intervals of time. Ex: &quot;This class is 60min long&quot;</span></li></ol></li><li><p><span>Computers have </span><code>time-of-day</code><span> clocks &amp; </span><code>monotonic</code></p><figure><table><thead><tr><th style='text-align:center;' ><span>time-of-day clocks</span></th><th style='text-align:center;' ><span>monotonic clocks</span></th></tr></thead><tbody><tr><td style='text-align:center;' ><span>sync&#39;d with NTP</span></td><td style='text-align:center;' ><span>only go forward, some kind of counter</span></td></tr><tr><td style='text-align:center;' ><span>Ok-ish for (1)</span></td><td style='text-align:center;' ><span>bad for (1)</span></td></tr><tr><td style='text-align:center;' ><span>bad for (2)</span></td><td style='text-align:center;' ><span>good for (2)</span></td></tr></tbody></table></figure></li><li><p><code>monotonic</code><span> clocks are preferred for distributed systems. There is an interesting cloudflare issue as they were using </span><code>time-of-day</code><span> clocks for calculating timeouts: </span><a href='https://blog.cloudflare.com/how-and-why-the-leap-second-affected-cloudflare-dns/' target='_blank' class='url'>https://blog.cloudflare.com/how-and-why-the-leap-second-affected-cloudflare-dns/</a></p></li><li><p><span>But what&#39;s the good way to mark points in time? There is really no good way with </span><strong><span>physical</span></strong><span> clocks</span></p></li><li><p><span>Both of the above clocks are </span><strong><span>physical clocks</span></strong><span>. But in distributed systems, we just can&#39;t get away with just having physical clocks. We need a different notion of clock, which is called </span><strong><span>logical clocks</span></strong></p></li></ul><figure><table><thead><tr><th style='text-align:center;' ><span>physical clocks</span></th><th style='text-align:center;' ><span>logical clocks</span></th></tr></thead><tbody><tr><td style='text-align:center;' ><span>time-of-day &amp; monotonic clocks</span></td><td style='text-align:center;' ><span>only measure ordering of events</span></td></tr><tr><td style='text-align:center;' >&nbsp;</td><td style='text-align:center;' ><span>which event happened before another</span></td></tr></tbody></table></figure><ul><li><p><span>Suppose A happened before B (A -&gt; B), then we can say that:</span></p><ul><li><span>A could have caused B</span></li><li><span>B could not have caused A</span></li></ul></li><li><p><span>This reasoning is good for:</span></p><ul><li><span>debugging (possible causes of a bug)</span></li><li><span>designing systems</span></li></ul></li></ul><h3 id='lamport-diagrams'><span>Lamport Diagrams</span></h3><ul><li><p><span>AKA Space-time diagrams</span></p></li><li><p><span>Process is a line with a discrete beginning that goes on forever and events are dots on that line and time goes forward. It also represents causality:</span>
+<img src="images/lamport_diagram_1.png" alt="lamport-diagram" style="zoom:50%;" /></p><ul><li><span>X, Y, Z are events</span></li><li><span>X happened before Y, Y happened before Z</span></li></ul></li><li><p><span>Consider three machines M0, M1, M2. Because these machines don&#39;t share memory, they communicate by sending messages to each other. Message send and receive are also events:</span>
+<img src="images/lamport_diagram_2.png" style="zoom:50%;" /></p><ul><li><span>Say P is a message sent event &amp; S is a message receive event</span></li><li><span>X, Y, Z are internal events</span></li></ul></li><li><p><span>From above diagram, we can come up with a general definition for </span><code>-&gt;</code><span> (happens-before relation):</span>
+<span>Given two events A &amp; B, we say </span><code>A -&gt; B</code><span> (&quot;A happened before B&quot;), if any of the following is true:</span></p><ul><li><span>A and B occur on the same process line with B after A</span></li><li><span>A is a message send event and B is the corresponding receive</span></li><li><span>if </span><code>A -&gt; C</code><span>, and </span><code>C -&gt; B</code><span>, then </span><code>A -&gt; B</code><span>  (trransitive closure)</span></li></ul></li><li><p><span>So we can summarize happens-before relation by using lamport diagram:</span>
+<img src="images/happens_before_relation.png" style="zoom:50%;" /></p></li><li><p><span>From above example, we can say </span><code>P -&gt; Y</code></p></li></ul><h3 id='network-models'><span>Network models</span></h3><h5 id='causal-anomaly'><span>Causal anomaly</span></h5><ul><li><span>Consider this lamport diagram:</span>
+<img src="images/causal_anomaly.png" style="zoom:50%;" /></li><li><span>Alice sends message to both Bob &amp; Carol: &quot;Bob Smells&quot;</span></li><li><span>Bob receives that message and then send </span><code>FU</code><span> to both Alice &amp; Carol</span></li><li><span>Carol wonders why she received this message ?? This is what is known as </span><strong><span>causal anomaly</span></strong></li><li><span>We can use the concept of </span><strong><span>happens-before</span></strong><span> to rule out such anomalies</span></li><li><span>Such anomalies could occur because of unbounded latency. It would really be helpful if we knew some fixed amount of time that it took for a message to get from Alice to intended recepient. Such kind of network where we know how much time it takes for a message to get where it gets is called a </span><strong><span>synchronous network</span></strong><span>. To be precise, A synchronous network is one wherre there exist an </span><code>n</code><span> such that no message takes longer than </span><code>n</code><span> units of time to be delivered.</span></li><li><span>There exists another network model called an </span><strong><span>asynchronous network</span></strong><span>. An asynchronous network is one where there exists no such </span><code>n</code></li><li><span>But what is a model? A model is a set of assumptions that you use to build a system. Those assumptions might be more or less realistic</span></li></ul><h5 id='state'><span>State</span></h5><ul><li><span>A state of a machine is the content of its memory and register at a particular instance of time. But we can also say that an event is a state because whatever is the contents of the memory, it is going to be completely determined by all the events that have happened up until then. So by going through the sequence of events, we can determine the state of the machine.</span></li></ul><h5 id='example'><span>Example</span></h5><p><span>Let&#39;s looks at some examples of </span><strong><span>happens-before</span></strong><span> relation:</span></p><p><img src="images/lamport_diagram_2.png" style="zoom:50%;" /></p><p><span>From above we can say that:</span></p><ul><li><span>P &amp; S, X &amp; Z, P &amp; Z are related by happens-before relation</span></li><li><span>But Q &amp; R are not related. We cannot say if Q happened before R or vice-versa. This case is called concurrent or independent. And is represented like this: </span><code>Q || R</code></li></ul><h3 id='partial-orders'><span>Partial Orders</span></h3><ul><li><p><span>Happens-before relation is a particular kind of relation, called a partial order. It&#39;s actually a special kind of partial order</span></p></li><li><p><strong><span>Definition</span></strong><span>: Partial orders are actually two things glued to each other:</span></p><ul><li><p><span>a set </span><code>S</code><span>, together with ...</span></p></li><li><p><span>a binary relation, usually, but not always, written </span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.807ex" height="2.11ex" viewBox="0 -705.6 778 908.7" role="img" focusable="false" style="vertical-align: -0.472ex;"><defs><path stroke-width="0" id="E50-MJMAIN-2264" d="M674 636Q682 636 688 630T694 615T687 601Q686 600 417 472L151 346L399 228Q687 92 691 87Q694 81 694 76Q694 58 676 56H670L382 192Q92 329 90 331Q83 336 83 348Q84 359 96 365Q104 369 382 500T665 634Q669 636 674 636ZM84 -118Q84 -108 99 -98H678Q694 -104 694 -118Q694 -130 679 -138H98Q84 -131 84 -118Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E50-MJMAIN-2264" x="0" y="0"></use></g></svg></span><script type="math/tex">\leq</script><span>,  that lets you compare things from </span><code>S</code><span>, and has these properties:</span></p><ul><li><span>Reflexivity: </span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.291ex" height="1.994ex" viewBox="0 -755.9 556 858.4" role="img" focusable="false" style="vertical-align: -0.238ex;"><defs><path stroke-width="0" id="E35-MJMAIN-2200" d="M0 673Q0 684 7 689T20 694Q32 694 38 680T82 567L126 451H430L473 566Q483 593 494 622T512 668T519 685Q524 694 538 694Q556 692 556 674Q556 670 426 329T293 -15Q288 -22 278 -22T263 -15Q260 -11 131 328T0 673ZM414 410Q414 411 278 411T142 410L278 55L414 410Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E35-MJMAIN-2200" x="0" y="0"></use></g></svg></span><script type="math/tex">\forall</script><span> a </span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.549ex" height="1.644ex" viewBox="0 -605.1 667 707.6" role="img" focusable="false" style="vertical-align: -0.238ex;"><defs><path stroke-width="0" id="E36-MJMAIN-2208" d="M84 250Q84 372 166 450T360 539Q361 539 377 539T419 540T469 540H568Q583 532 583 520Q583 511 570 501L466 500Q355 499 329 494Q280 482 242 458T183 409T147 354T129 306T124 272V270H568Q583 262 583 250T568 230H124V228Q124 207 134 177T167 112T231 48T328 7Q355 1 466 0H570Q583 -10 583 -20Q583 -32 568 -40H471Q464 -40 446 -40T417 -41Q262 -41 172 45Q84 127 84 250Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E36-MJMAIN-2208" x="0" y="0"></use></g></svg></span><script type="math/tex">\in</script><span> S, a </span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.807ex" height="2.11ex" viewBox="0 -705.6 778 908.7" role="img" focusable="false" style="vertical-align: -0.472ex;"><defs><path stroke-width="0" id="E50-MJMAIN-2264" d="M674 636Q682 636 688 630T694 615T687 601Q686 600 417 472L151 346L399 228Q687 92 691 87Q694 81 694 76Q694 58 676 56H670L382 192Q92 329 90 331Q83 336 83 348Q84 359 96 365Q104 369 382 500T665 634Q669 636 674 636ZM84 -118Q84 -108 99 -98H678Q694 -104 694 -118Q694 -130 679 -138H98Q84 -131 84 -118Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E50-MJMAIN-2264" x="0" y="0"></use></g></svg></span><script type="math/tex">\leq</script><span> a</span></li><li><span>Anti-Symmetry: </span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.291ex" height="1.994ex" viewBox="0 -755.9 556 858.4" role="img" focusable="false" style="vertical-align: -0.238ex;"><defs><path stroke-width="0" id="E35-MJMAIN-2200" d="M0 673Q0 684 7 689T20 694Q32 694 38 680T82 567L126 451H430L473 566Q483 593 494 622T512 668T519 685Q524 694 538 694Q556 692 556 674Q556 670 426 329T293 -15Q288 -22 278 -22T263 -15Q260 -11 131 328T0 673ZM414 410Q414 411 278 411T142 410L278 55L414 410Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E35-MJMAIN-2200" x="0" y="0"></use></g></svg></span><script type="math/tex">\forall</script><span> a, b </span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.549ex" height="1.644ex" viewBox="0 -605.1 667 707.6" role="img" focusable="false" style="vertical-align: -0.238ex;"><defs><path stroke-width="0" id="E36-MJMAIN-2208" d="M84 250Q84 372 166 450T360 539Q361 539 377 539T419 540T469 540H568Q583 532 583 520Q583 511 570 501L466 500Q355 499 329 494Q280 482 242 458T183 409T147 354T129 306T124 272V270H568Q583 262 583 250T568 230H124V228Q124 207 134 177T167 112T231 48T328 7Q355 1 466 0H570Q583 -10 583 -20Q583 -32 568 -40H471Q464 -40 446 -40T417 -41Q262 -41 172 45Q84 127 84 250Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E36-MJMAIN-2208" x="0" y="0"></use></g></svg></span><script type="math/tex">\in</script><span> s, if a </span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.807ex" height="2.11ex" viewBox="0 -705.6 778 908.7" role="img" focusable="false" style="vertical-align: -0.472ex;"><defs><path stroke-width="0" id="E50-MJMAIN-2264" d="M674 636Q682 636 688 630T694 615T687 601Q686 600 417 472L151 346L399 228Q687 92 691 87Q694 81 694 76Q694 58 676 56H670L382 192Q92 329 90 331Q83 336 83 348Q84 359 96 365Q104 369 382 500T665 634Q669 636 674 636ZM84 -118Q84 -108 99 -98H678Q694 -104 694 -118Q694 -130 679 -138H98Q84 -131 84 -118Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E50-MJMAIN-2264" x="0" y="0"></use></g></svg></span><script type="math/tex">\leq</script><span> b and b </span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.807ex" height="2.11ex" viewBox="0 -705.6 778 908.7" role="img" focusable="false" style="vertical-align: -0.472ex;"><defs><path stroke-width="0" id="E50-MJMAIN-2264" d="M674 636Q682 636 688 630T694 615T687 601Q686 600 417 472L151 346L399 228Q687 92 691 87Q694 81 694 76Q694 58 676 56H670L382 192Q92 329 90 331Q83 336 83 348Q84 359 96 365Q104 369 382 500T665 634Q669 636 674 636ZM84 -118Q84 -108 99 -98H678Q694 -104 694 -118Q694 -130 679 -138H98Q84 -131 84 -118Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E50-MJMAIN-2264" x="0" y="0"></use></g></svg></span><script type="math/tex">\leq</script><span> a, then a = b</span></li><li><span>Transitivity: </span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.291ex" height="1.994ex" viewBox="0 -755.9 556 858.4" role="img" focusable="false" style="vertical-align: -0.238ex;"><defs><path stroke-width="0" id="E35-MJMAIN-2200" d="M0 673Q0 684 7 689T20 694Q32 694 38 680T82 567L126 451H430L473 566Q483 593 494 622T512 668T519 685Q524 694 538 694Q556 692 556 674Q556 670 426 329T293 -15Q288 -22 278 -22T263 -15Q260 -11 131 328T0 673ZM414 410Q414 411 278 411T142 410L278 55L414 410Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E35-MJMAIN-2200" x="0" y="0"></use></g></svg></span><script type="math/tex">\forall</script><span> a, b, c </span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.549ex" height="1.644ex" viewBox="0 -605.1 667 707.6" role="img" focusable="false" style="vertical-align: -0.238ex;"><defs><path stroke-width="0" id="E36-MJMAIN-2208" d="M84 250Q84 372 166 450T360 539Q361 539 377 539T419 540T469 540H568Q583 532 583 520Q583 511 570 501L466 500Q355 499 329 494Q280 482 242 458T183 409T147 354T129 306T124 272V270H568Q583 262 583 250T568 230H124V228Q124 207 134 177T167 112T231 48T328 7Q355 1 466 0H570Q583 -10 583 -20Q583 -32 568 -40H471Q464 -40 446 -40T417 -41Q262 -41 172 45Q84 127 84 250Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E36-MJMAIN-2208" x="0" y="0"></use></g></svg></span><script type="math/tex">\in</script><span> S, if a </span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.807ex" height="2.11ex" viewBox="0 -705.6 778 908.7" role="img" focusable="false" style="vertical-align: -0.472ex;"><defs><path stroke-width="0" id="E50-MJMAIN-2264" d="M674 636Q682 636 688 630T694 615T687 601Q686 600 417 472L151 346L399 228Q687 92 691 87Q694 81 694 76Q694 58 676 56H670L382 192Q92 329 90 331Q83 336 83 348Q84 359 96 365Q104 369 382 500T665 634Q669 636 674 636ZM84 -118Q84 -108 99 -98H678Q694 -104 694 -118Q694 -130 679 -138H98Q84 -131 84 -118Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E50-MJMAIN-2264" x="0" y="0"></use></g></svg></span><script type="math/tex">\leq</script><span> b and b </span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.807ex" height="2.11ex" viewBox="0 -705.6 778 908.7" role="img" focusable="false" style="vertical-align: -0.472ex;"><defs><path stroke-width="0" id="E50-MJMAIN-2264" d="M674 636Q682 636 688 630T694 615T687 601Q686 600 417 472L151 346L399 228Q687 92 691 87Q694 81 694 76Q694 58 676 56H670L382 192Q92 329 90 331Q83 336 83 348Q84 359 96 365Q104 369 382 500T665 634Q669 636 674 636ZM84 -118Q84 -108 99 -98H678Q694 -104 694 -118Q694 -130 679 -138H98Q84 -131 84 -118Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E50-MJMAIN-2264" x="0" y="0"></use></g></svg></span><script type="math/tex">\leq</script><span> c, then a </span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.807ex" height="2.11ex" viewBox="0 -705.6 778 908.7" role="img" focusable="false" style="vertical-align: -0.472ex;"><defs><path stroke-width="0" id="E50-MJMAIN-2264" d="M674 636Q682 636 688 630T694 615T687 601Q686 600 417 472L151 346L399 228Q687 92 691 87Q694 81 694 76Q694 58 676 56H670L382 192Q92 329 90 331Q83 336 83 348Q84 359 96 365Q104 369 382 500T665 634Q669 636 674 636ZM84 -118Q84 -108 99 -98H678Q694 -104 694 -118Q694 -130 679 -138H98Q84 -131 84 -118Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E50-MJMAIN-2264" x="0" y="0"></use></g></svg></span><script type="math/tex">\leq</script><span> c</span></li></ul></li></ul></li><li><p><span>But happens-before relation is little weird:</span></p><ul><li><span>Reflexivity: Events donot follow reflexivity. We cannot say an event </span><code>A</code><span> is </span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.807ex" height="2.11ex" viewBox="0 -705.6 778 908.7" role="img" focusable="false" style="vertical-align: -0.472ex;"><defs><path stroke-width="0" id="E50-MJMAIN-2264" d="M674 636Q682 636 688 630T694 615T687 601Q686 600 417 472L151 346L399 228Q687 92 691 87Q694 81 694 76Q694 58 676 56H670L382 192Q92 329 90 331Q83 336 83 348Q84 359 96 365Q104 369 382 500T665 634Q669 636 674 636ZM84 -118Q84 -108 99 -98H678Q694 -104 694 -118Q694 -130 679 -138H98Q84 -131 84 -118Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E50-MJMAIN-2264" x="0" y="0"></use></g></svg></span><script type="math/tex">\leq</script><span> event </span><code>A</code><span> i.e. an event </span><code>A</code><span> happens before itself</span></li><li><span>Anti-Symmetry: Works for happens-before because there will never be a case where an event </span><code>A</code><span> happens before </span><code>B</code><span> and simultaneously </span><code>B</code><span> happens before </span><code>A</code><span>. Hence it is </span><em><span>vacuously</span></em><span> true</span></li><li><span>Transitivity: Checks out for happens-before. It is already part of happens-before&#39;s definition</span></li></ul></li><li><p><span>Hence </span><strong><span>happens-before</span></strong><span> relation is called </span><strong><span>irreflexive partial order</span></strong><span>. It is not a   real partial order</span></p></li><li><p><span>Example of a real partial order: set inclusion {a, b, c}</span></p><ul><li><span>All subsets S = {</span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.384ex" height="2.461ex" viewBox="0 -755.9 596 1059.4" role="img" focusable="false" style="vertical-align: -0.705ex;"><defs><path stroke-width="0" id="E41-MJMATHI-3D5" d="M409 688Q413 694 421 694H429H442Q448 688 448 686Q448 679 418 563Q411 535 404 504T392 458L388 442Q388 441 397 441T429 435T477 418Q521 397 550 357T579 260T548 151T471 65T374 11T279 -10H275L251 -105Q245 -128 238 -160Q230 -192 227 -198T215 -205H209Q189 -205 189 -198Q189 -193 211 -103L234 -11Q234 -10 226 -10Q221 -10 206 -8T161 6T107 36T62 89T43 171Q43 231 76 284T157 370T254 422T342 441Q347 441 348 445L378 567Q409 686 409 688ZM122 150Q122 116 134 91T167 53T203 35T237 27H244L337 404Q333 404 326 403T297 395T255 379T211 350T170 304Q152 276 137 237Q122 191 122 150ZM500 282Q500 320 484 347T444 385T405 400T381 404H378L332 217L284 29Q284 27 285 27Q293 27 317 33T357 47Q400 66 431 100T475 170T494 234T500 282Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E41-MJMATHI-3D5" x="0" y="0"></use></g></svg></span><script type="math/tex">\phi</script><span>, {a}, {b}, {c}, {a, b}, {a, c}, {b, c}, {a, b, c}}</span></li><li><span>Follows Reflexive: {a} </span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.807ex" height="2.11ex" viewBox="0 -705.6 778 908.7" role="img" focusable="false" style="vertical-align: -0.472ex;"><defs><path stroke-width="0" id="E50-MJMAIN-2264" d="M674 636Q682 636 688 630T694 615T687 601Q686 600 417 472L151 346L399 228Q687 92 691 87Q694 81 694 76Q694 58 676 56H670L382 192Q92 329 90 331Q83 336 83 348Q84 359 96 365Q104 369 382 500T665 634Q669 636 674 636ZM84 -118Q84 -108 99 -98H678Q694 -104 694 -118Q694 -130 679 -138H98Q84 -131 84 -118Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E50-MJMAIN-2264" x="0" y="0"></use></g></svg></span><script type="math/tex">\leq</script><span> {a}, Yes. </span><code>a</code><span> is a subset of </span><code>a</code></li><li><span>Follows Anti-symmetry</span></li><li><span>Follows Transitivity</span></li></ul></li><li><p><span>In partial order, every element is not related to every other element. And hence it is called partial order. A </span><strong><span>total order</span></strong><span> is where every element is comparable/related to every other element. For example, Natural numbers.</span></p></li></ul><h3 id='lamport-clocks'><span>Lamport Clocks</span></h3><ul><li><p><span>It is a simplest kind of logical clock, denotated by </span><code>LC(&lt;event&gt;)</code></p></li><li><p><span>If </span><code>A -&gt; B</code><span>, then </span><code>LC(A) &lt; LC(B)</code><span>. </span><strong><span>Lamport clocks are consistent with causality</span></strong></p></li><li><p><span>Algorithm to assigning LCs to events:</span></p><ol start='' ><li><span>Every process has a counter, initially 0</span></li><li><span>On every event, a process increments its counter</span></li><li><span>When sending a message, a process includes its current counter along with the message</span></li><li><span>When receiving a message, set your counter to </span><code>max(local_counter, message_counter) + 1</code><span>. Plus 1 is only if we consider message receive as an event</span></li></ol><p><span>	</span><img src="images/lamport_clocks.png" style="zoom:50%;" /></p></li><li><p><span>As seen above, LC for process P1 started with 0, then changed to 1 and then to 4, 5, 7 due to message communication with other processes. Note counter is sent as part of metadata</span></p></li><li><p><span>We know that if </span><code>A -&gt; B</code><span>, then </span><code>LC(A) &lt; LC(B)</code><span>. But if </span><code>LC(A) &lt; LC(B)</code><span>, do we know if </span><code>A -&gt; B</code><span>? No! As seen in above diagram, A and B are on different process lines and A had no communication with B. Hence we can say that </span><strong><span>LCs do not characterize causality</span></strong></p></li><li><p><span>We can say that </span><code>A -&gt; B</code><span> only if A can reach B via some path. For example, </span><code>P2(6)</code><span> can be reached from </span><code>P2(1)</code><span> via this path </span><code>P2(1) to P3(2) to P3(3) to P3(4) to P2(5) to P2(6)</code><span>. Hence we can say that </span><strong><span>causality is graph reachability in spacetime</span></strong></p></li><li><p><span>Reference: Schwartz &amp; Mattern (1994): &quot;Detecting causal relationships in distributed systemcs: In search of the Holy Grail&quot;</span></p></li><li><p><span>Then what are LCs used for? let&#39;s take contrapositive of above LC-Causality Equation:</span>
+<span>if </span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.549ex" height="1.177ex" viewBox="0 -454.3 667 506.6" role="img" focusable="false" style="vertical-align: 0.207ex; margin-bottom: -0.328ex;"><defs><path stroke-width="0" id="E44-MJMAIN-AC" d="M56 323T56 336T70 356H596Q603 353 611 343V102Q598 89 591 89Q587 89 584 90T579 94T575 98T572 102L571 209V316H70Q56 323 56 336Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E44-MJMAIN-AC" x="0" y="0"></use></g></svg></span><script type="math/tex">\neg</script><span> (LC(A) &lt; LC(B)), then </span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.549ex" height="1.177ex" viewBox="0 -454.3 667 506.6" role="img" focusable="false" style="vertical-align: 0.207ex; margin-bottom: -0.328ex;"><defs><path stroke-width="0" id="E44-MJMAIN-AC" d="M56 323T56 336T70 356H596Q603 353 611 343V102Q598 89 591 89Q587 89 584 90T579 94T575 98T572 102L571 209V316H70Q56 323 56 336Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E44-MJMAIN-AC" x="0" y="0"></use></g></svg></span><script type="math/tex">\neg</script><span>(A -&gt; B)</span></p><ul><li><span>In other words, if LC(A) is not less than LC(B), then we know that A did not happen before B</span></li><li><span>That&#39;s what LCs can be used for! They can rule out things as not having caused other things. That is really valuable. It helps us in debugging</span></li></ul></li></ul><h3 id='vector-clocks'><span>Vector Clocks</span></h3><ul><li><p><span>As seen above, LCs do not characterize causality. This is where vector clocks come in. </span><strong><span>VCs are consistent with causality and characterize causality</span></strong></p></li><li><p><span>A vector clock (VC) is just a sequence of integers</span></p><ol start='' ><li><span>Every process maintains a vector of integers initialized to 0, one for each process</span></li><li><span>On every event, a process increments its own position in its vector clock</span></li><li><span>When sending a message, each process includes its current clock (after incrementing)</span></li><li><span>When receiving a message, each process updates its VC to the </span><strong><span>max</span></strong><span> of the received VC and its own (after incrementing). Max is pointwise/elementwise maximum: Say there are two VCs: </span><code>[1, 12, 4]</code><span>  &amp; </span><code>[7, 0, 2]</code><span>. Then pointwise max is </span><code>[7, 12, 4]</code></li></ol></li><li><p><span>So following is true for VC:</span>
+<span>A -&gt; B </span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="5.606ex" height="1.644ex" viewBox="0 -605.1 2413.6 707.6" role="img" focusable="false" style="vertical-align: -0.238ex;"><defs><path stroke-width="0" id="E45-MJMAIN-27FA" d="M1438 514Q1438 525 1454 525Q1459 525 1462 525T1467 525T1471 524T1473 523T1475 520T1477 517T1480 512Q1517 438 1578 381T1689 300T1785 263Q1802 258 1802 250T1793 239T1756 228T1698 204Q1554 134 1480 -12Q1476 -21 1473 -22T1458 -24Q1438 -24 1438 -17Q1438 -13 1443 0Q1478 69 1529 123L1539 133H318L328 123Q379 69 414 0Q419 -13 419 -17Q419 -24 399 -24Q388 -24 385 -23T377 -12Q332 77 253 144T72 237Q62 240 59 242T56 250T59 257T70 262T89 268T119 278T160 296Q303 366 377 512Q382 522 385 523T401 525Q419 524 419 515Q419 510 414 500Q379 431 328 377L318 367H1539L1529 377Q1496 412 1467 458T1438 514ZM274 173H1583L1593 181Q1632 211 1710 250Q1709 251 1692 259T1647 283T1593 319L1583 327H930L927 328L602 327H274L264 319Q225 289 147 250Q148 249 165 241T210 217T264 181L274 173Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E45-MJMAIN-27FA" x="277" y="0"></use></g></svg></span><script type="math/tex">\iff</script><span> VC(A) &lt; VC(B)</span></p></li><li><p><span>But then how do we compare to VCs?</span></p><p><span>VC(A) &lt; VC(B), when if for every index (i), VC(A)i </span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.807ex" height="2.11ex" viewBox="0 -705.6 778 908.7" role="img" focusable="false" style="vertical-align: -0.472ex;"><defs><path stroke-width="0" id="E50-MJMAIN-2264" d="M674 636Q682 636 688 630T694 615T687 601Q686 600 417 472L151 346L399 228Q687 92 691 87Q694 81 694 76Q694 58 676 56H670L382 192Q92 329 90 331Q83 336 83 348Q84 359 96 365Q104 369 382 500T665 634Q669 636 674 636ZM84 -118Q84 -108 99 -98H678Q694 -104 694 -118Q694 -130 679 -138H98Q84 -131 84 -118Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E50-MJMAIN-2264" x="0" y="0"></use></g></svg></span><script type="math/tex">\leq</script><span> VC(B)i and VC(A) </span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.807ex" height="2.577ex" viewBox="0 -806.1 778 1109.7" role="img" focusable="false" style="vertical-align: -0.705ex;"><defs><path stroke-width="0" id="E51-MJMAIN-2260" d="M166 -215T159 -215T147 -212T141 -204T139 -197Q139 -190 144 -183L306 133H70Q56 140 56 153Q56 168 72 173H327L406 327H72Q56 332 56 347Q56 360 70 367H426Q597 702 602 707Q605 716 618 716Q625 716 630 712T636 703T638 696Q638 692 471 367H707Q722 359 722 347Q722 336 708 328L451 327L371 173H708Q722 163 722 153Q722 140 707 133H351Q175 -210 170 -212Q166 -215 159 -215Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E51-MJMAIN-2260" x="0" y="0"></use></g></svg></span><script type="math/tex">\ne</script><span> VC(B). Examples:</span></p><ul><li><p><span>VC(A) = [2, 2, 0] &amp; VC(B) = [3, 2, 0]</span></p><ul><li><span>here VC(A) &lt; VC(B)</span></li></ul></li><li><p><span>VC(A) = [2, 2, 0] &amp; VC(B) = [1, 2, 3]</span></p><ul><li><span>here VC(A) </span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.807ex" height="2.577ex" viewBox="0 -806.1 778 1109.7" role="img" focusable="false" style="vertical-align: -0.705ex;"><defs><path stroke-width="0" id="E49-MJAMS-226E" d="M693 -14T693 -20T687 -33T675 -41Q667 -41 506 37L344 112Q342 112 262 -46Q184 -196 176 -205Q172 -209 168 -209T162 -208Q155 -208 151 -203T146 -190Q146 -178 171 -137Q193 -91 251 21L306 132L198 183Q142 208 118 220T88 238T82 249Q82 253 86 261Q92 267 278 357L464 443L529 572Q561 637 577 667T597 703T607 708Q615 708 622 702T629 688Q629 680 575 579L524 474Q524 473 545 482T598 508Q666 541 673 541T686 535T693 521Q693 512 679 504T589 459L493 414L360 150Q366 148 378 142T431 116T529 70Q686 -8 689 -10Q693 -14 693 -20ZM380 277L433 383Q432 385 292 319T151 250T237 209T324 170L380 277Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E49-MJAMS-226E" x="0" y="0"></use></g></svg></span><script type="math/tex">\nless</script><span> VC(B)</span></li><li><span>Also, VC(B) </span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.807ex" height="2.577ex" viewBox="0 -806.1 778 1109.7" role="img" focusable="false" style="vertical-align: -0.705ex;"><defs><path stroke-width="0" id="E49-MJAMS-226E" d="M693 -14T693 -20T687 -33T675 -41Q667 -41 506 37L344 112Q342 112 262 -46Q184 -196 176 -205Q172 -209 168 -209T162 -208Q155 -208 151 -203T146 -190Q146 -178 171 -137Q193 -91 251 21L306 132L198 183Q142 208 118 220T88 238T82 249Q82 253 86 261Q92 267 278 357L464 443L529 572Q561 637 577 667T597 703T607 708Q615 708 622 702T629 688Q629 680 575 579L524 474Q524 473 545 482T598 508Q666 541 673 541T686 535T693 521Q693 512 679 504T589 459L493 414L360 150Q366 148 378 142T431 116T529 70Q686 -8 689 -10Q693 -14 693 -20ZM380 277L433 383Q432 385 292 319T151 250T237 209T324 170L380 277Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E49-MJAMS-226E" x="0" y="0"></use></g></svg></span><script type="math/tex">\nless</script><span> VC(A). </span></li><li><span>In this case, they are called </span><strong><span>concurrent</span></strong><span> or </span><strong><span>independent</span></strong><span>: </span><code>VC(A) || VC(B)</code></li></ul></li></ul></li><li><p><span>Let&#39;s look at lamport diagram:</span>
+<img src="images/vector_clocks.png" style="zoom:50%;" /></p><ul><li><span>As seen above, vector clocks start with [0, 0, 0] for each process. Each index is a process, so from above example VC: [</span><Alice-count><span>, </span><Bob-count><span>, </span><Carol-count><span>]</span></li><li><span>As we know causality is graph reachability in spacetime, this can be seen above where all the encircled VCs can reach event A</span></li><li><span>Also, we can also notice that VCs of all the events above A is &lt; VC(A)</span></li><li><span>A and B are independent (concurrent), we can also say that they are causally unrelated. This is great! But just comparing numbers (vectors), computers can figure out if two events are causally related</span></li></ul></li></ul><h3 id='protocols'><span>Protocols</span></h3><ul><li><span>A set of rules that computers use to communicate with each other</span></li><li><span>A lamport diagram can describe a protocol run, but it cannot describe a protocol as there can be infinite runs of a protocol. But it can describe a violation of the protocol</span></li></ul><h3 id='message-delivery'><span>Message Delivery</span></h3><ul><li><p><span>Receving vs Delivery of messages:</span></p><ul><li><span>Sending a message is something you do</span></li><li><span>Receiving a message is something that happens to you (you don&#39;t control)</span></li><li><span>Delivering a message is something you do (for example: protocol can queue up message before delivering it to process)</span></li></ul></li><li><p><span>An anomaly is a run that violates the property that we want to have to be true</span></p></li><li><p><span>Consider </span><strong><span>FIFO delivery</span></strong><span>. If a process sends message M2 after message M1, </span><strong><u><span>any process delivering both</span></u></strong><span>, delivers M1 first.</span>
+<span>Here&#39;s how a FIFO anomaly will looks like:</span>
+<img src="images/fifo_violation.png" style="zoom:50%;" /><span> </span></p><ul><li><span>As seen above, two messages are delivered to same process, but since the order is changed, it is a FIFO violation (anomaly)</span></li></ul></li><li><p><span>There is also </span><strong><span>causal delivery</span></strong><span>. If M1&#39;s send happens before M2&#39;s send, then M1&#39;s delivery happens before M2&#39;s delivery</span></p></li><li><p><span>FIFO violation is also causal delivery violation</span>
+<img src="images/causal_violation.png" style="zoom:50%;" /><span> </span></p><ul><li><span>Above is not a FIFO violation as no process is delivering both the messages from same origin process, infact they are not at all receiving two message from same proccess</span></li><li><span>But it is a causal delivery violation, as seen above Alice sends message to Carol before Bob sends it to Carol. But Bob&#39;s message is received first.</span></li></ul></li><li><p><strong><span>Totally-Ordered delivery</span></strong><span>: If a process delivers message M1, then M2, then </span><strong><u><span>all</span></u></strong><span> processes delivering both M1 and M2 delivers M1 first</span>
+<img src="images/total_order_anomaly.png" style="zoom:50%;" /></p><ul><li><span>Consider two clients (C1, C2) and two replica keystores (R1, R2)</span></li><li><span>C1, updates value of X to 1 and then to 2. And C2, updates value of X to 2 and then to 1</span></li><li><span>This is total-order anomaly. Same messages were delivered in different order by C1 &amp; C2</span></li><li><span>In below chart, FIFO anomaly is not a violation of totally ordered delivery, as there is only single process delivering messages. Note in above definition we need more than one delivering process to know if there is TO (total order) anomaly:</span>
+<img src="images/fifo_violation.png" style="zoom:50%;" /></li></ul></li><li><p><span>How to provide delivery guarantees?</span></p><ul><li><span>Guaranteeing causal delivery also guarantees FIFO delivery</span></li><li><span>Following is a delivery guarantee chart from bottom providing no guarantee to top being complete guarantee:</span>
+<img src="images/delivery_guarantees.png" style="zoom:50%;" /></li><li><span>YOLO: Just symobilises on guarantee</span></li><li><span>Guaranteeing causal delivery guarantees FIFO delivery</span></li><li><span>But guaranteeing TO delivery doesn&#39;t guarantee neither FIFO nor causal delivery</span></li><li><span>We need some other kind of delivery which guarantees both TO &amp; Causal delivery</span></li><li><span>From above heirarchy we can also deduce that if there is FIFO anomaly, then there is also Causal anomaly</span></li></ul></li></ul><h3 id='implementing-fifo-delivery'><span>Implementing FIFO delivery</span></h3><ul><li><p><span>Typical approach: </span><u><span>Sequence numbers</span></u><span> = Messages get tagged with a sequence number from the send and a sender ID</span></p></li><li><p><span>Sender increments its sequence number (SN) after sending</span></p></li><li><p><span>If a received message&#39;s SN is the SN+1 of the previously delivered message from that sender, deliver it! Otherwise, queue it up for later</span></p></li><li><p><span>Above is one approach. Some issues with above approach:</span></p><ul><li><span>What if message gets lost? Then all the later messages will get queued for ever. We need some sort of reliable delivery. Hence this approach assumes reliable delivery</span></li></ul></li><li><p><span>Another way is </span><u><span>acknowledgements</span></u><span>! Receiving process replies with ack message.</span></p></li></ul><h3 id='implementing-causal-delivery'><span>Implementing Causal Delivery</span></h3><ul><li><p><span>We can use vector clocks to rule out causal anomaly</span></p></li><li><p><span>By only having to track message </span><u><span>sends</span></u><span>, vector clocks can rule out causal anomaly. This is the implementation for causal broadcast</span>
+<img src="images/causal_broadcast.png" style="zoom:50%;" /></p><ul><li><span>As seen above, the causal anomaly is when Bob&#39;s message gets delivered before Alice&#39;s message by Carol</span></li><li><span>This is avoided by using VCs. Carol checks VC sent by Bob (1,1,0) against its own VC (0,0,0) and sees that Alice&#39;s index position is greater than it&#39;s local clock and hence the message queued</span></li><li><span>Once Carol receives Alice&#39;s VC (1,0,0) it updates its VC to (1,0,0) and then release the queued message sent by Bob</span></li><li><span>As seen above, it works </span><strong><span>only for</span></strong><span> causal broadcasts</span></li></ul></li><li><p><strong><span>Causal Broadcast Algorithm</span></strong><span>:</span></p><ol start='' ><li><p><span>If a message sent by P1 is delivered at P2, increment P2&#39;s local clock in the P1&#39;s position</span></p></li><li><p><span>If a message is sent by a process, then first increment its own position in its local clock, and include the local clock along with the message</span></p></li><li><p><span>A message sent by process P1 is only delivered at P2 if:</span></p><ul><li><span>VC at position P1 of incoming message is equal to VC at position P1 of P2&#39;s VC + 1 i.e P1&#39;sVC[P1] = P2&#39;sVC[P1] + 1. This ensures that timestamp on the message from P1 makes it the next expected message</span></li><li><span>and, VC at all other positions of incoming message is less than equal to VC of all other positions of P2&#39;s VC i.e P1&#39;sVC[Pk] </span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.807ex" height="2.11ex" viewBox="0 -705.6 778 908.7" role="img" focusable="false" style="vertical-align: -0.472ex;"><defs><path stroke-width="0" id="E50-MJMAIN-2264" d="M674 636Q682 636 688 630T694 615T687 601Q686 600 417 472L151 346L399 228Q687 92 691 87Q694 81 694 76Q694 58 676 56H670L382 192Q92 329 90 331Q83 336 83 348Q84 359 96 365Q104 369 382 500T665 634Q669 636 674 636ZM84 -118Q84 -108 99 -98H678Q694 -104 694 -118Q694 -130 679 -138H98Q84 -131 84 -118Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E50-MJMAIN-2264" x="0" y="0"></use></g></svg></span><script type="math/tex">\leq</script><span> P2&#39;sVC[Pk] for all k </span><span class="MathJax_SVG" tabindex="-1" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1.807ex" height="2.577ex" viewBox="0 -806.1 778 1109.7" role="img" focusable="false" style="vertical-align: -0.705ex;"><defs><path stroke-width="0" id="E51-MJMAIN-2260" d="M166 -215T159 -215T147 -212T141 -204T139 -197Q139 -190 144 -183L306 133H70Q56 140 56 153Q56 168 72 173H327L406 327H72Q56 332 56 347Q56 360 70 367H426Q597 702 602 707Q605 716 618 716Q625 716 630 712T636 703T638 696Q638 692 471 367H707Q722 359 722 347Q722 336 708 328L451 327L371 173H708Q722 163 722 153Q722 140 707 133H351Q175 -210 170 -212Q166 -215 159 -215Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xlink:href="#E51-MJMAIN-2260" x="0" y="0"></use></g></svg></span><script type="math/tex">\ne</script><span>1. This ensures that no missing messages from other processes</span></li></ul></li></ol><p><span>Here&#39;s another example:</span>
+<img src="images/causal_broadcast_2.png" style="zoom:50%;" /></p></li><li><p><span>Causal delivery doesn&#39;t rule out TO anomalies! As seen below causal broadcast algorithm works fine, but there is TO anomaly</span>
+<img src="images/causal_to_anomaly.png" style="zoom:50%;" /></p></li><li><p><span>Hence if we need both causal delivery and TO delivery, then we need some thing other than VC to ensure both</span></p></li></ul><h4 id='ways-that-potential-causality---is-used-in-distributed-systems'><span>Ways that potential causality (-&gt;) is used in distributed systems</span></h4><ul><li><span>Determine order of events after the fact (for debugging)</span></li><li><span>Causal ordering of events as they&#39;re happening</span></li><li><span>Consistent global snapshots. If A -&gt; B and B is in the snapshot then A should be too. A state of a process is all the events on the process at a particular point in time. Hence a global state will be the state of all the processes at a particular point in time. But we can&#39;t rely on time-of-day clocks for this as a clock can be running in different time (timezones) on different processes. Hence, we need some algorithm to consistent take global snaphot of all the processes&#39; state. That is Chandy-Lamport Snapshot algorithm</span></li></ul><h3 id='chandy-lamport-algorithm'><span>Chandy-Lamport Algorithm</span></h3><ul><li><span>A channel is a connection from one process to another</span></li><li><span>Channels act like FIFO queues (to prevent FIFO violations)</span></li></ul></div></div>
+</body>
+</html>

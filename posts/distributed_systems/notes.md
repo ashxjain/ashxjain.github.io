@@ -88,11 +88,15 @@ CSE138, Lecture on Youtube: https://www.youtube.com/playlist?list=PLNPUF5QyWU8O0
 
 * AKA Space-time diagrams
 * Process is a line with a discrete beginning that goes on forever and events are dots on that line and time goes forward. It also represents causality:
+
   <img src="images/lamport_diagram_1.png" alt="lamport-diagram" style="zoom:50%;" />
+
   * X, Y, Z are events
   * X happened before Y, Y happened before Z
 * Consider three machines M0, M1, M2. Because these machines don't share memory, they communicate by sending messages to each other. Message send and receive are also events:
+
   <img src="images/lamport_diagram_2.png" style="zoom:50%;" />
+
   * Say P is a message sent event & S is a message receive event
   * X, Y, Z are internal events
 * From above diagram, we can come up with a general definition for `->` (happens-before relation):
@@ -101,7 +105,9 @@ CSE138, Lecture on Youtube: https://www.youtube.com/playlist?list=PLNPUF5QyWU8O0
   * A is a message send event and B is the corresponding receive
   * if `A -> C`, and `C -> B`, then `A -> B`  (trransitive closure)
 * So we can summarize happens-before relation by using lamport diagram:
+
   <img src="images/happens_before_relation.png" style="zoom:50%;" />
+
 * From above example, we can say `P -> Y`
 
 ###Network models
@@ -109,6 +115,7 @@ CSE138, Lecture on Youtube: https://www.youtube.com/playlist?list=PLNPUF5QyWU8O0
 ##### Causal anomaly
 
 * Consider this lamport diagram:
+
   <img src="images/causal_anomaly.png" style="zoom:50%;" />
 
 * Alice sends message to both Bob & Carol: "Bob Smells"
@@ -171,7 +178,7 @@ From above we can say that:
   3. When sending a message, a process includes its current counter along with the message
   4. When receiving a message, set your counter to `max(local_counter, message_counter) + 1`. Plus 1 is only if we consider message receive as an event
 
-  ​	<img src="images/lamport_clocks.png" style="zoom:50%;" />
+     <img src="images/lamport_clocks.png" style="zoom:50%;" />
 
 * As seen above, LC for process P1 started with 0, then changed to 1 and then to 4, 5, 7 due to message communication with other processes. Note counter is sent as part of metadata
 
@@ -213,7 +220,9 @@ From above we can say that:
     * In this case, they are called **concurrent** or **independent**: `VC(A) || VC(B)`
 
 * Let's look at lamport diagram:
+
   <img src="images/vector_clocks.png" style="zoom:50%;" />
+
   * As seen above, vector clocks start with [0, 0, 0] for each process. Each index is a process, so from above example VC: [<Alice-count>, <Bob-count>, <Carol-count>]
   * As we know causality is graph reachability in spacetime, this can be seen above where all the encircled VCs can reach event A
   * Also, we can also notice that VCs of all the events above A is < VC(A)
@@ -233,24 +242,34 @@ From above we can say that:
 * An anomaly is a run that violates the property that we want to have to be true
 * Consider **FIFO delivery**. If a process sends message M2 after message M1, **<u>any process delivering both</u>**, delivers M1 first.
   Here's how a FIFO anomaly will looks like:
+
   <img src="images/fifo_violation.png" style="zoom:50%;" /> 
+
   * As seen above, two messages are delivered to same process, but since the order is changed, it is a FIFO violation (anomaly)
 * There is also **causal delivery**. If M1's send happens before M2's send, then M1's delivery happens before M2's delivery
 * FIFO violation is also causal delivery violation
+
   <img src="images/causal_violation.png" style="zoom:50%;" /> 
+
   * Above is not a FIFO violation as no process is delivering both the messages from same origin process, infact they are not at all receiving two message from same proccess
   * But it is a causal delivery violation, as seen above Alice sends message to Carol before Bob sends it to Carol. But Bob's message is received first.
 * **Totally-Ordered delivery**: If a process delivers message M1, then M2, then **<u>all</u>** processes delivering both M1 and M2 delivers M1 first
+
   <img src="images/total_order_anomaly.png" style="zoom:50%;" />
+
   * Consider two clients (C1, C2) and two replica keystores (R1, R2)
   * C1, updates value of X to 1 and then to 2. And C2, updates value of X to 2 and then to 1
   * This is total-order anomaly. Same messages were delivered in different order by C1 & C2
   * In below chart, FIFO anomaly is not a violation of totally ordered delivery, as there is only single process delivering messages. Note in above definition we need more than one delivering process to know if there is TO (total order) anomaly:
+
     <img src="images/fifo_violation.png" style="zoom:50%;" />
+
 * How to provide delivery guarantees?
   * Guaranteeing causal delivery also guarantees FIFO delivery
   * Following is a delivery guarantee chart from bottom providing no guarantee to top being complete guarantee:
+
     <img src="images/delivery_guarantees.png" style="zoom:50%;" />
+
   * YOLO: Just symobilises on guarantee
   * Guaranteeing causal delivery guarantees FIFO delivery
   * But guaranteeing TO delivery doesn't guarantee neither FIFO nor causal delivery
@@ -271,6 +290,7 @@ From above we can say that:
 * We can use vector clocks to rule out causal anomaly
 
 * By only having to track message <u>sends</u>, vector clocks can rule out causal anomaly. This is the implementation for causal broadcast
+
   <img src="images/causal_broadcast.png" style="zoom:50%;" />
 
   * As seen above, the causal anomaly is when Bob's message gets delivered before Alice's message by Carol
@@ -286,10 +306,12 @@ From above we can say that:
      * VC at position P1 of incoming message is equal to VC at position P1 of P2's VC + 1 i.e P1'sVC[P1] = P2'sVC[P1] + 1. This ensures that timestamp on the message from P1 makes it the next expected message
      * and, VC at all other positions of incoming message is less than equal to VC of all other positions of P2's VC i.e P1'sVC[Pk] $\leq$ P2'sVC[Pk] for all k $\ne$1. This ensures that no missing messages from other processes
 
-  Here's another example:
+  **Here's another example:**
+
   <img src="images/causal_broadcast_2.png" style="zoom:50%;" />
 
 * Causal delivery doesn't rule out TO anomalies! As seen below causal broadcast algorithm works fine, but there is TO anomaly
+
   <img src="images/causal_to_anomaly.png" style="zoom:50%;" />
 
 * Hence if we need both causal delivery and TO delivery, then we need some thing other than VC to ensure both
@@ -300,7 +322,7 @@ From above we can say that:
 * Causal ordering of events as they're happening
 * Consistent global snapshots. If A -> B and B is in the snapshot then A should be too. A state of a process is all the events on the process at a particular point in time. Hence a global state will be the state of all the processes at a particular point in time. But we can't rely on time-of-day clocks for this as a clock can be running in different time (timezones) on different processes. Hence, we need some algorithm to consistent take global snaphot of all the processes' state. That is Chandy-Lamport Snapshot algorithm
 
-### Chandy-Lamport Algorithm
+### Chandy-Lamport Algorithms
 
 * A channel is a connection from one process to another
 * Channels act like FIFO queues (to prevent FIFO violations)

@@ -1,43 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8">
+    <title>Notes | Ashish Jain</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata&display=swap" rel="stylesheet">
+    <link href="/static/css/styles.css" rel="stylesheet">
+    <link href="/static/css/syntax.css" rel="stylesheet">
     <style type="text/css">
       body {
         margin: 0 auto;
         max-width: 50em;
-        font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+        font-family: 'Inconsolata', monospace;
+      }
+      .footer {
+	color: black;
+	padding-top: 20px;
+	padding-bottom: 50px;
+      }
+      .footer-link {
+	color: black;
       }
     </style>
   </head>
-<body>
-  <h1>My Notes<hr></h1>
-  <div>
-    <h2>Linux</h1>
-    <p><a href=/posts/linux/set_env_live_gdb.html>Apr 05, 2018: Modify environment variables of a running process</a></p>
-  </div>
-  <div>
-    <h2>AI</h1>
-    <p><a href=/posts/ai/style_transfer_densenet.html>July 22, 2018: Neural Style Transfer using DenseNet</a></p>
-    <p><a href=/posts/ai/t3d.html>Apr 04, 2020: Understanding Implementation Of Twin Delayed DDPG (T3D)</a></p>
-    <p><a href=/posts/ai/rcnn.html>Dec 06, 2020: Understanding RCNN models and its variants</a></p>
-    <p><a href=/posts/ai/yolo.html>Dec 06, 2020: Understanding YOLO model and its variants</a></p>
-    <p><a href=/posts/ai/superconvergence.html>Dec 06, 2020: Achieving SuperConvergence</a></p>
-    <p><a href=/posts/ai/midas_yolov3_planercnn.html>Dec 06, 2020: Combining multiple models</a></p>
-  </div>
-  <div>
-    <h2>Python Course Notes (EPAi)</h1>
-    <p><a href=/posts/python/epai/session1_memory.html>Jan 22, 2021: (1/9) Memory Usage & Optimizations</a></p>
-    <p><a href=/posts/python/epai/session2_numeric_types.html>Jan 29, 2021: (2/9) Numeric Types</a></p>
-    <p><a href=/posts/python/epai/session3_booleans.html>Jan 30, 2021: (3/9) Booleans</a></p>
-    <p><a href=/posts/python/epai/session4_functions.html>Feb 06, 2021: (4/9) Functions</a></p>
-    <p><a href=/posts/python/epai/session5_scopes_closures.html>Feb 20, 2021: (5/9) Scopes, Closures and Decorators</a></p>
-    <p><a href=/posts/python/epai/session6_sequence_types.html>Feb 27, 2021: (6/9) Sequence Types</a></p>
-    <p><a href=/posts/python/epai/session7_iterators_iterables.html>Mar 20, 2021: (7/9) Iterables and Iterators</a></p>
-    <p><a href=/posts/python/epai/session8_generators.html>Mar 27, 2021: (8/9) Generators and Iteration Tools</a></p>
-    <p><a href=/posts/python/epai/session9_modules_packages.html>Apr 13, 2021: (9/9) Modules and Packages</a></p>
-  </div>
-  <div>
-    <h2>Distributed Systems</h1>
-    <p><a href=/posts/distributed_systems/notes.html>May 15, 2021: Lecture notes from CSE138 by Lindsey Cuper</a></p>
-  </div>
-</body>
+  <body>
+    <div class="header">
+      <h1>My Notes<hr></h1>
+    </div>
+    <div>
+      <h2>Linux</h1>
+      <p>Apr 05, 2018: <a href=/posts/linux/set_env_live_gdb.html>Modify environment variables of a running process</a></p>
+    </div>
+    <div>
+      <h2>AI</h1>
+      <p>Jul 22, 2018: <a href=/posts/ai/style_transfer_densenet.html>Neural Style Transfer using DenseNet</a></p>
+      <p>Apr 04, 2020: <a href=/posts/ai/t3d.html>Understanding Implementation Of Twin Delayed DDPG (T3D)</a></p>
+      <p>Dec 06, 2020: <a href=/posts/ai/rcnn.html>Understanding RCNN models and its variants</a></p>
+      <p>Dec 06, 2020: <a href=/posts/ai/yolo.html>Understanding YOLO model and its variants</a></p>
+      <p>Dec 06, 2020: <a href=/posts/ai/superconvergence.html>Achieving SuperConvergence</a></p>
+      <p>Dec 06, 2020: <a href=/posts/ai/midas_yolov3_planercnn.html>Combining multiple models</a></p>
+    </div>
+    <div>
+      <h2>Python Course Notes (EPAi)</h1>
+      <p>Jan 22, 2021: <a href=/posts/python/epai/session1_memory.html>(1/9) Memory Usage & Optimizations</a></p>
+      <p>Jan 29, 2021: <a href=/posts/python/epai/session2_numeric_types.html>(2/9) Numeric Types</a></p>
+      <p>Jan 30, 2021: <a href=/posts/python/epai/session3_booleans.html>(3/9) Booleans</a></p>
+      <p>Feb 06, 2021: <a href=/posts/python/epai/session4_functions.html>(4/9) Functions</a></p>
+      <p>Feb 20, 2021: <a href=/posts/python/epai/session5_scopes_closures.html>(5/9) Scopes, Closures and Decorators</a></p>
+      <p>Feb 27, 2021: <a href=/posts/python/epai/session6_sequence_types.html>(6/9) Sequence Types</a></p>
+      <p>Mar 20, 2021: <a href=/posts/python/epai/session7_iterators_iterables.html>(7/9) Iterables and Iterators</a></p>
+      <p>Mar 27, 2021: <a href=/posts/python/epai/session8_generators.html>(8/9) Generators and Iteration Tools</a></p>
+      <p>Apr 13, 2021: <a href=/posts/python/epai/session9_modules_packages.html>(9/9) Modules and Packages</a></p>
+    </div>
+    <div>
+      <h2>Distributed Systems</h1>
+      <p>May 15, 2021: <a href=/posts/distributed_systems/notes.html>Lecture notes from CSE138 by Lindsey Cuper</a></p>
+    </div>
+    <hr>
+    <div class="footer">
+      <a class="footer-link" href="/">Notes</a>
+      &hyphen;
+      <a class="footer-link" target="_blank" href="https://www.linkedin.com/in/ashxjain">LinkedIn</a>
+      &hyphen;
+      <a class="footer-link" target="_blank" href="https://www.github.com/ashxjain">GitHub</a>
+    </div>
+  </body>
+</html>

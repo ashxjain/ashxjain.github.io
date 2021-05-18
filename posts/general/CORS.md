@@ -1,5 +1,7 @@
 ### Dealing With Cross Site Origin Restrictions
 
+<img src="https://images.unsplash.com/photo-1605322054569-567f7c6a1713?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1789&q=80" alt="unsplash_img" style="zoom:70%;" />
+
 I started out with testing an issue which I was facing on my setup. My setup included an API server written in Golang and a HTML client code which is to be run on browser. This backend server hosted HTTP and Websocket API endpoints:
 
 * `/api/v1/login`: To authenticate the user and get a login token. This login token is sent to client as part of HTTP Cookies in response headers

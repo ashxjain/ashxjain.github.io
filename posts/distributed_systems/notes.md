@@ -1,5 +1,7 @@
 ## Notes on Distributed Systems
 
+![unsplash-image](https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1782&q=80)
+
 #### Course Details:
 
 CSE138, Lecture on Youtube: https://www.youtube.com/playlist?list=PLNPUF5QyWU8O0Wd8QDh9KaM1ggsxspJ31 by Professor Lindsey Kuper, UC Santa Cruz
@@ -322,7 +324,88 @@ From above we can say that:
 * Causal ordering of events as they're happening
 * Consistent global snapshots. If A -> B and B is in the snapshot then A should be too. A state of a process is all the events on the process at a particular point in time. Hence a global state will be the state of all the processes at a particular point in time. But we can't rely on time-of-day clocks for this as a clock can be running in different time (timezones) on different processes. Hence, we need some algorithm to consistent take global snaphot of all the processes' state. That is Chandy-Lamport Snapshot algorithm
 
-### Chandy-Lamport Algorithms
+### Chandy-Lamport Snapshot Algorithm
 
-* A channel is a connection from one process to another
+* A channel is a connection from one process to another:
+
+  * C<sub>12</sub> : Symbolizes a channel from proccess 1 to process 2
+  * C<sub>21</sub>: Symbolizes a channel from process 2 to process 1
+
 * Channels act like FIFO queues (to prevent FIFO violations)
+
+* Any process can start this algorithm without notifying other processes. Hence this is a <u>decentralized algorithm</u> (one that has multiple initiators)
+
+* Another nice property of this algorithm is that it can run with the application running i.e. sending messages
+
+* The process which starts the algorithm is called "initiator process":
+
+  * Records its own state
+  * Sends a marker message out on all its outgoing channels
+  * Starts recording the messages it receives on all its incoming channels
+
+* When process P<sub>i</sub> gets a marker message on channel C<sub>ki</sub> (channel from P<sub>k</sub> to P<sub>i</sub>):
+
+  * If it's the first marker P<sub>i</sub> has seen:
+
+    * P<sub>i</sub> records its state
+    * P<sub>i</sub> marks channel C<sub>ki</sub> as <u>empty</u>
+    * P<sub>i</sub> sends a marker out on every outgoing channel C<sub>ij</sub>
+    * P<sub>i</sub> starts recording incoming messages on all its incoming channels except C<sub>ki</sub>
+
+    TL;DR: Record your state and start recording incoming messages
+
+  * If P<sub>i</sub> has already seen a marker:
+
+    * P<sub>i</sub> stops recording on C<sub>ki</sub>, and sets C<sub>ki</sub>'s final state as the sequence of all the incoming messages that arrived on C<sub>ki</sub> since recording began
+    * Note: Sending a marker message is also considered as seeing a marker
+
+* Nice [Blog](http://composition.al/blog/2019/04/26/an-example-run-of-the-chandy-lamport-snapshot-algorithm/) on example run of this algorithm. Must read and hence will not go through that explanation here!
+
+  <img src="http://composition.al/images/content/chandy-lamport-8.png" style="zoom:30%;" />
+
+* Important Note: This algorithm <u>assumes reliable delivery</u> i.e. it assumes that no messages can get lost, but they could be slow
+
+* Number of marker messages sent are N * (N -1), since each process sends marker messages to all other processes
+
+* So when does a process know that snapshoting is done? So it is done when it has recorded its state and the state of all its incoming channels
+
+* But when does the whole thing terminate? When all the processes ensures the above thing
+
+* **Assumptions/Limitations:**
+
+  * Channels are FIFO. If channels are not FIFO, then we must pause the application to capture snapshot using Chandy-Lamport Algorithm
+  * Reliable delivery of messages (messages aren't lost/corrupted/duplicated)
+  * Processes don't crash while the algorithm is running (if it crashes, then we must start over)
+
+* **Good things:**
+
+  * If the communication graph is <u>strongly connected</u> and <u>at least one</u> process starts with recording its state then all processes will record its state in finite time assuming reliable delivery
+  * Multiple processes can initiate this algorithm. If this was not the case, then it would been a problem on who should initiate this algorithm
+
+### What are snaphots good for ?
+
+* Checkpointing
+* Deadlock detection
+* Any <u>stable property</u> (a property that, once true, remains true) detection. For example: deadlock is a stable property. Another example is "the system has finished doing useful work" i.e. termination
+
+### Cut
+
+* A cut is a "time frontier" going across a Lamport diagram, dividing it into "past" and "future"
+
+  <img src="http://composition.al/images/content/chandy-lamport-8-final-snapshot.png" style="zoom:30%;" />
+
+* An event is "in the cut" if it is on the "past" side
+
+* A cut is consistent when, for all the events E, F that are in the cut, if F-> E, then F is also in the cut
+
+  <img src="images/consistent_cut.png" style="zoom:50%;" />
+
+* The Chandy-Lamport algorithm determines a consistent cut. It will always give us a global snapshot of processes that correspond to consistent cut. Hence it is also mentioned that this algorithm is <u>causally correct</u>
+
+### Safety - Liveness property
+
+* **Safety Property:** <u>Something bad won't happen</u> i.e. it can be violated in a finite execution
+  For example: FIFO delivery, Causal delivery, TO delivery.
+* **Liveness Property:** <u>Something good eventually happens</u>
+  For example: Consider a process P1, sends request to process P2. And the property is that P2 always replies to a request. Does this execution violates this property? No, unless there is a time limit on this we cannot say that it violates this property. Hence liveness property do not have finite counter examples. We can draw lot of executions that satisfy the liveness property, but we can't draw a picture of finite execution that violates it. Hence they are harder to reason about than compared to safety property.
+

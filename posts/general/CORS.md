@@ -51,7 +51,6 @@ When we open URL #1, it makes requests to URL #2. This is cross origin requests 
                   ExpiresAt: time.Now().AddDate(0, 0, 1).Unix(),
           }
           token := jwt.NewWithClaims(jwt.SigningMethodHS512, &claims)
-          // Set ID just for local testing
           jwtToken, err := token.SignedString([]byte("testkey"))
           if err != nil {
                   return err

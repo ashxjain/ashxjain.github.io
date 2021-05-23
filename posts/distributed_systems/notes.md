@@ -2,13 +2,13 @@
 
 ![unsplash-image](https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1782&q=80)
 
-#### Course Details:
+### Course Details:
 
 CSE138, Lecture on Youtube: https://www.youtube.com/playlist?list=PLNPUF5QyWU8O0Wd8QDh9KaM1ggsxspJ31 by Professor Lindsey Kuper, UC Santa Cruz
 
 ### What & Why?
 
-#####What is a distributed system?
+##### What is a distributed system?
 
 * Martin Kelppmann's definition:
   * running on several nodes connected by a network
@@ -21,7 +21,7 @@ CSE138, Lecture on Youtube: https://www.youtube.com/playlist?list=PLNPUF5QyWU8O0
   | Working around partial failures & expecting those kinds of failures |          Treat potential failures as total failures          |
   |                                                              | Performs checkpointing (if a problem occurs, then you rollback to your last checkpoint) |
 
-* Ways of failures:
+##### Ways of failures:
 
   * Machines itself failing
   * Connection between machines failing
@@ -41,14 +41,18 @@ CSE138, Lecture on Youtube: https://www.youtube.com/playlist?list=PLNPUF5QyWU8O0
   Again from m1's point of view, all these situtations are indistinguishable
 
 * Hence, If you send a request to another node and don't receive a response, it is **impossible** to know whey (without global knowledge of the system)
+
 * Some other situations that could occur (Byzantine faults):
   * m2's lying, refusing to answer
   * cosmic rays
+
 * How can m1 deal with all these uncertainities? One way is to set **timeouts**. Post timeout assume failure. But then consider this scenario:
   * m1 sends request to m2 to increment x
   * m2 increments x, and replies "OK" to m1
   * But say m1 doesn't receive "OK". Then it'll be wrong to assume that increment didn't occur and it'll be wrong to assume that increment did occur. This kind of **uncertainity** is the **fundamental characteristic of a distributed system and is inevitable**
+
 * A distributed system is characterised by partial failure and unbounded latency
+
 * Why would you want a distributed system?
   * data too big to fit on one machine
   * to make things faster
@@ -95,54 +99,58 @@ CSE138, Lecture on Youtube: https://www.youtube.com/playlist?list=PLNPUF5QyWU8O0
 
   * X, Y, Z are events
   * X happened before Y, Y happened before Z
+
+### Happens-Before Relation
+
 * Consider three machines M0, M1, M2. Because these machines don't share memory, they communicate by sending messages to each other. Message send and receive are also events:
 
   <img src="images/lamport_diagram_2.png" style="zoom:50%;" />
 
   * Say P is a message sent event & S is a message receive event
   * X, Y, Z are internal events
-* From above diagram, we can come up with a general definition for `->` (happens-before relation):
+
+* From above diagram, we can come up with a general definition for `->` (**happens-before relation**):
   Given two events A & B, we say `A -> B` ("A happened before B"), if any of the following is true:
+
   * A and B occur on the same process line with B after A
   * A is a message send event and B is the corresponding receive
   * if `A -> C`, and `C -> B`, then `A -> B`  (trransitive closure)
+
 * So we can summarize happens-before relation by using lamport diagram:
 
   <img src="images/happens_before_relation.png" style="zoom:50%;" />
 
 * From above example, we can say `P -> Y`
 
-###Network models
+* Let's looks at some more examples:
 
-##### Causal anomaly
+  <img src="images/lamport_diagram_2.png" style="zoom:50%;" />
 
-* Consider this lamport diagram:
+  From above we can say that:
 
-  <img src="images/causal_anomaly.png" style="zoom:50%;" />
+  * P & S, X & Z, P & Z are related by happens-before relation
+  * But Q & R are not related. We cannot say if Q happened before R or vice-versa. This case is called **concurrent or independent**. And is represented like this: `Q || R`
+
+###Causal Anomaly
+
+Consider this lamport diagram:
+
+<img src="images/causal_anomaly.png" style="zoom:50%;" />
 
 * Alice sends message to both Bob & Carol: "Bob Smells"
 * Bob receives that message and then send `FU` to both Alice & Carol
 * Carol wonders why she received this message ?? This is what is known as **causal anomaly**
 * We can use the concept of **happens-before** to rule out such anomalies
 
-* Such anomalies could occur because of unbounded latency. It would really be helpful if we knew some fixed amount of time that it took for a message to get from Alice to intended recepient. Such kind of network where we know how much time it takes for a message to get where it gets is called a **synchronous network**. To be precise, A synchronous network is one wherre there exist an `n` such that no message takes longer than `n` units of time to be delivered.
+### Network Models
+
+* Causal nomalies could occur because of unbounded latency. It would really be helpful if we knew some fixed amount of time that it took for a message to get from Alice to intended recepient. Such kind of network where we know how much time it takes for a message to get where it gets is called a **synchronous network**. To be precise, A synchronous network is one wherre there exist an `n` such that no message takes longer than `n` units of time to be delivered.
 * There exists another network model called an **asynchronous network**. An asynchronous network is one where there exists no such `n`
 * But what is a model? A model is a set of assumptions that you use to build a system. Those assumptions might be more or less realistic
 
-##### State
+### State And Events
 
 * A state of a machine is the content of its memory and register at a particular instance of time. But we can also say that an event is a state because whatever is the contents of the memory, it is going to be completely determined by all the events that have happened up until then. So by going through the sequence of events, we can determine the state of the machine.
-
-##### Example
-
-Let's looks at some examples of **happens-before** relation:
-
-<img src="images/lamport_diagram_2.png" style="zoom:50%;" />
-
-From above we can say that:
-
-* P & S, X & Z, P & Z are related by happens-before relation
-* But Q & R are not related. We cannot say if Q happened before R or vice-versa. This case is called concurrent or independent. And is represented like this: `Q || R`
 
 ### Partial Orders
 
@@ -218,7 +226,7 @@ From above we can say that:
     * here VC(A) < VC(B)
   * VC(A) = [2, 2, 0] & VC(B) = [1, 2, 3]
     * here VC(A) $\nless$ VC(B)
-    * Also, VC(B) $\nless$ VC(A). 
+    * Also, VC(B) $\nless$ VC(A).
     * In this case, they are called **concurrent** or **independent**: `VC(A) || VC(B)`
 
 * Let's look at lamport diagram:
@@ -242,20 +250,30 @@ From above we can say that:
   * Receiving a message is something that happens to you (you don't control)
   * Delivering a message is something you do (for example: protocol can queue up message before delivering it to process)
 * An anomaly is a run that violates the property that we want to have to be true
+
+#### FIFO Delivery
+
 * Consider **FIFO delivery**. If a process sends message M2 after message M1, **<u>any process delivering both</u>**, delivers M1 first.
   Here's how a FIFO anomaly will looks like:
 
-  <img src="images/fifo_violation.png" style="zoom:50%;" /> 
+  <img src="images/fifo_violation.png" style="zoom:50%;" />
 
   * As seen above, two messages are delivered to same process, but since the order is changed, it is a FIFO violation (anomaly)
+
+#### Causal Delivery
+
 * There is also **causal delivery**. If M1's send happens before M2's send, then M1's delivery happens before M2's delivery
+
 * FIFO violation is also causal delivery violation
 
-  <img src="images/causal_violation.png" style="zoom:50%;" /> 
+  <img src="images/causal_violation.png" style="zoom:50%;" />
 
   * Above is not a FIFO violation as no process is delivering both the messages from same origin process, infact they are not at all receiving two message from same proccess
   * But it is a causal delivery violation, as seen above Alice sends message to Carol before Bob sends it to Carol. But Bob's message is received first.
-* **Totally-Ordered delivery**: If a process delivers message M1, then M2, then **<u>all</u>** processes delivering both M1 and M2 delivers M1 first
+
+#### Totally Ordered Delivery
+
+* If a process delivers message M1, then M2, then **<u>all</u>** processes delivering both M1 and M2 delivers M1 first
 
   <img src="images/total_order_anomaly.png" style="zoom:50%;" />
 
@@ -266,7 +284,8 @@ From above we can say that:
 
     <img src="images/fifo_violation.png" style="zoom:50%;" />
 
-* How to provide delivery guarantees?
+#### Delivery guarantees
+
   * Guaranteeing causal delivery also guarantees FIFO delivery
   * Following is a delivery guarantee chart from bottom providing no guarantee to top being complete guarantee:
 
@@ -300,7 +319,7 @@ From above we can say that:
   * Once Carol receives Alice's VC (1,0,0) it updates its VC to (1,0,0) and then release the queued message sent by Bob
   * As seen above, it works **only for** causal broadcasts
 
-* **Causal Broadcast Algorithm**:
+#### Causal Broadcast Algorithm
 
   1. If a message sent by P1 is delivered at P2, increment P2's local clock in the P1's position
   2. If a message is sent by a process, then first increment its own position in its local clock, and include the local clock along with the message
@@ -308,7 +327,7 @@ From above we can say that:
      * VC at position P1 of incoming message is equal to VC at position P1 of P2's VC + 1 i.e P1'sVC[P1] = P2'sVC[P1] + 1. This ensures that timestamp on the message from P1 makes it the next expected message
      * and, VC at all other positions of incoming message is less than equal to VC of all other positions of P2's VC i.e P1'sVC[Pk] $\leq$ P2'sVC[Pk] for all k $\ne$1. This ensures that no missing messages from other processes
 
-  **Here's another example:**
+  Here's another example:
 
   <img src="images/causal_broadcast_2.png" style="zoom:50%;" />
 
@@ -318,7 +337,9 @@ From above we can say that:
 
 * Hence if we need both causal delivery and TO delivery, then we need some thing other than VC to ensure both
 
-####Ways that potential causality (->) is used in distributed systems
+####Uses of potential causality
+
+Ways that potential causality (->) is used in distributed systems:
 
 * Determine order of events after the fact (for debugging)
 * Causal ordering of events as they're happening
@@ -382,11 +403,11 @@ From above we can say that:
   * If the communication graph is <u>strongly connected</u> and <u>at least one</u> process starts with recording its state then all processes will record its state in finite time assuming reliable delivery
   * Multiple processes can initiate this algorithm. If this was not the case, then it would been a problem on who should initiate this algorithm
 
-### What are snaphots good for ?
+* **What are snaphots good for ?**
 
-* Checkpointing
-* Deadlock detection
-* Any <u>stable property</u> (a property that, once true, remains true) detection. For example: deadlock is a stable property. Another example is "the system has finished doing useful work" i.e. termination
+  * Checkpointing
+  * Deadlock detection
+  * Any <u>stable property</u> (a property that, once true, remains true) detection. For example: deadlock is a stable property. Another example is "the system has finished doing useful work" i.e. termination
 
 ### Cut
 
@@ -404,8 +425,44 @@ From above we can say that:
 
 ### Safety - Liveness property
 
-* **Safety Property:** <u>Something bad won't happen</u> i.e. it can be violated in a finite execution
-  For example: FIFO delivery, Causal delivery, TO delivery.
-* **Liveness Property:** <u>Something good eventually happens</u>
-  For example: Consider a process P1, sends request to process P2. And the property is that P2 always replies to a request. Does this execution violates this property? No, unless there is a time limit on this we cannot say that it violates this property. Hence liveness property do not have finite counter examples. We can draw lot of executions that satisfy the liveness property, but we can't draw a picture of finite execution that violates it. Hence they are harder to reason about than compared to safety property.
+* **Safety Property:** Colloquially, <u>Something bad won't happen</u>. They can be violated in a finite execution
+  Examples: FIFO delivery, Causal delivery, TO delivery.
+* **Liveness Property:** Colloquially, <u>Something good eventually happens</u>. Cannot be violated in a finite execution
+  For example: Consider a process P1, sends request to process P2. And the property is that P2 always replies to a request. Does this execution violates this property? No, unless there is a time limit on this we cannot say that it violates this property. Hence liveness property do not have finite counter examples. We can draw lot of executions that satisfy the liveness property, but we can't draw a picture of finite execution that violates it. Another example is reliable delivery. **Reliable Delivery:** Let P1 be a process that sends a message m to process P2. If neither P1 nor P2 crashes, then P2 eventually delivers m.
 
+### Fault Models
+
+* Models which tells which categories of faults can occur, so that we know which one to worry about
+* More formally, A <u>fault model</u> is a specification that specifies what kinds of faults a system may exhibit (and thus defines what kinds of faults are to be tolerated by the system)
+* Types of faults (in below order):
+  * Crash fault - a process fails by halting (crashes) (stops sending or receiving any messages)
+  * Omission fault - a message is lost (a process fails to send or receive a message)
+  * Timing fault - a process responds too late (will not be discussed here as we will be dealing with asynchronous networks where there is no time guarantee)
+  * Byzantine fault - a process behaves in an arbitrary or even malicious way
+* Why hierarchy/order on faults?
+  - Crash faults are a special case of omission faults where all messages to and from a process get lost after some point
+  - Timing faults are a special case of ommision faults where all messages are lost infinitely
+  - A process that can tolerate Byzantine faults, should be able to tolerate all other faults. The Byzantine faulty process can do anything at once including mimicking the fault behaviours that you get with those other kind of faults
+
+<img src="images/fault_models.png" style="zoom:50%;" />
+
+* Byzantine fault tolerance is the most complicated and expensive to implement
+* Byzantine faults can be further sub-divided as some Byzantine faults are easier to handle than compared to others
+  * Authentication-detectable Byzantine faults: Like message corruption, we can deal with this using checksum. We can just detect the corruption and drop the message, then it becomes omission fault
+
+#### Two Generals Problem
+
+<img src="images/two_generals_problem.png" style="zoom:50%;" />
+
+* An illustration of Omission model
+* Say Alice and Bob are two generals on top of the hill. And for them to win over enemy, then have to attack it together. So Alice sends a messager to Bob with a message being the time of day to attack the enemy. Now there could multiple problems:
+  * Messenger doesn't reach Bob
+  * Messenger reaches Bob, but then Alice doesn't know that. For this Bob will have to reply back with an acknowledgement. But then that ack could get lost
+  * Say Ack reaches Alice, but then Bob doesn't know that. So Alice will have to send another message and it keeps going.
+* Hence we can say, In the **Omission model**, it is impossible for a general to now that the other will attack
+* Workarounds:
+  * Make a plan in advance (an example of <u>common knowledge</u>). We say that there's <u>common knowledge</u> of some piece of information P when:
+    * everyone knows P
+    * everyone knows that everyone knows P
+    * everyone knows .... that everyone knows P
+  * Increase Bob's confidence, by Alice sending multiple messages until it receives ack from Bob
